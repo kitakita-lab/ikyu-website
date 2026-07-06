@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+/*
+  ikyu design tokens
+  - 背景は温かみのある生成り。純白・純黒は使わない
+  - アクセントは「乾いた花のロゼ」1色のみ(リンク/ラベル/フォーカス)
+  - コントラストは全組み合わせで WCAG AA 以上(本文は AAA)を検証済み
+*/
+@theme {
+  --color-base: #faf8f5;
+  --color-base-soft: #f3ede4;
+  --color-ink: #3a3532;
+  --color-ink-soft: #6e645d;
+  --color-rose: #8e5f66;
+  --color-rose-soft: #b08a8f;
+  --color-line: #e7dfd3;
+
+  --font-serif: var(--font-zen-old-mincho), "Hiragino Mincho ProN",
+    "Yu Mincho", serif;
+  --font-display: var(--font-cormorant), "Times New Roman", serif;
+  --font-sans: var(--font-noto-sans-jp), "Hiragino Kaku Gothic ProN",
+    sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-base);
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  letter-spacing: 0.04em;
+  line-height: 2;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background-color: color-mix(in srgb, var(--color-rose-soft) 35%, transparent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-rose);
+  outline-offset: 3px;
+}
+
+/* ヒーローの静かな入場(モーションはこれとhoverのみ) */
+@keyframes fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-rise {
+  animation: fade-rise 0.9s ease-out both;
+}
+
+.animate-fade-rise-delay {
+  animation: fade-rise 0.9s ease-out 0.25s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-fade-rise,
+  .animate-fade-rise-delay {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* FAQ(details/summary)の三角マーカーを消して自前の記号に */
+details.faq summary {
+  list-style: none;
+  cursor: pointer;
+}
+details.faq summary::-webkit-details-marker {
+  display: none;
+}
+details.faq summary::after {
+  content: "+";
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--color-rose);
+  margin-left: auto;
+  padding-left: 1rem;
+  flex-shrink: 0;
+}
+details.faq[open] summary::after {
+  content: "−";
+}
