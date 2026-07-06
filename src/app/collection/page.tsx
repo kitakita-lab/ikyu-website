@@ -1,5 +1,5 @@
-import Image from "next/image";
 import type { Metadata } from "next";
+import { HeroImage } from "@/components/features/HeroImage";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -56,16 +56,15 @@ export default function CollectionPage() {
           </p>
         </Container>
         <div className="mt-14 md:mt-20">
-          <div className="relative aspect-[4/5] w-full sm:aspect-[16/9]">
-            <Image
-              src="/images/flatlay.webp"
-              alt="ikyuの作品の集合。ゴールドのスネークチェーンネックレス、バングル、虹色の透明ビーズのイヤリング、刺繍レースのリボン"
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover object-center"
-            />
-          </div>
+          <HeroImage
+            alt="ikyuの作品の集合。ゴールドのスネークチェーンネックレス、バングル、虹色の透明ビーズのイヤリング、刺繍レースのリボン"
+            mobile={{ src: "/images/flatlay.webp", width: 1600, height: 1600 }}
+            desktop={{
+              src: "/images/flatlay-wide.webp",
+              width: 1600,
+              height: 900,
+            }}
+          />
         </div>
       </Section>
 
@@ -80,7 +79,7 @@ export default function CollectionPage() {
               <div key={item.title}>
                 <p
                   aria-hidden="true"
-                  className="font-display text-[15px] tracking-[0.24em] text-rose-soft"
+                  className="font-display text-[15px] tracking-[0.24em] text-rose"
                 >
                   {String(i + 1).padStart(2, "0")}
                 </p>

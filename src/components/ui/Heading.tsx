@@ -19,7 +19,7 @@ export function Heading({ children, as: Tag = "h2", id, className = "" }: Props)
         ? "text-[22px] leading-[1.9] md:text-[28px]"
         : "text-[18px] leading-[1.9] md:text-[20px]";
   return (
-    <Tag id={id} className={`font-medium tracking-[0.06em] ${size} ${className}`}>
+    <Tag id={id} className={`font-normal tracking-[0.06em] ${size} ${className}`}>
       {children}
     </Tag>
   );

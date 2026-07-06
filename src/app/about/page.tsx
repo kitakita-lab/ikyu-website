@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { Metadata } from "next";
+import { HeroImage } from "@/components/features/HeroImage";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -34,16 +35,19 @@ export default function AboutPage() {
           </p>
         </Container>
         <div className="mt-14 md:mt-20">
-          <div className="relative aspect-[4/5] w-full sm:aspect-[3/2]">
-            <Image
-              src="/images/atelier-hands.webp"
-              alt="工具を手に、小さな花のビーズのピアスを組み立てる作り手の手元。作業台にはゴールドの金具が並ぶ"
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover"
-            />
-          </div>
+          <HeroImage
+            alt="工具を手に、小さな花のビーズのピアスを組み立てる作り手の手元。作業台にはゴールドの金具が並ぶ"
+            mobile={{
+              src: "/images/atelier-hands-tall.webp",
+              width: 1080,
+              height: 1350,
+            }}
+            desktop={{
+              src: "/images/atelier-hands-wide.webp",
+              width: 1448,
+              height: 965,
+            }}
+          />
         </div>
       </Section>
 

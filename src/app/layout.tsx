@@ -1,17 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import {
-  Cormorant_Garamond,
-  Noto_Sans_JP,
-  Zen_Old_Mincho,
-} from "next/font/google";
+import { Cormorant_Garamond, Zen_Old_Mincho } from "next/font/google";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { JsonLd } from "@/components/features/JsonLd";
 import { site } from "@/content/site";
 import "./globals.css";
 
+/*
+ * Webフォントは「明朝400」と「欧文セリフ」のみに絞る(LCP対策)。
+ * 太字は使わず、細さそのものを繊細さの表現として扱う。
+ * UI用サンセリフはシステムフォントで賄う(globals.css の --font-sans)。
+ */
 const zenOldMincho = Zen_Old_Mincho({
-  weight: ["400", "500"],
+  weight: "400",
   variable: "--font-zen-old-mincho",
   display: "swap",
   preload: false,
@@ -22,13 +23,6 @@ const cormorant = Cormorant_Garamond({
   weight: ["400", "500"],
   variable: "--font-cormorant",
   display: "swap",
-});
-
-const notoSansJp = Noto_Sans_JP({
-  weight: ["400", "500"],
-  variable: "--font-noto-sans-jp",
-  display: "swap",
-  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -96,7 +90,7 @@ export default function RootLayout({
   return (
     <html
       lang="ja"
-      className={`${zenOldMincho.variable} ${cormorant.variable} ${notoSansJp.variable}`}
+      className={`${zenOldMincho.variable} ${cormorant.variable}`}
     >
       <body>
         <a

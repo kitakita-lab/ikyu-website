@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { Metadata } from "next";
+import { HeroImage } from "@/components/features/HeroImage";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -22,11 +23,11 @@ export default function HomePage() {
       {/* ヒーロー:コピーが先、写真があとに続く(言葉のブランドであることを最初に示す) */}
       <Section space="compact" className="pb-0 md:pb-0">
         <Container>
-          <div className="animate-fade-rise">
+          <div>
             <p className="font-display text-[13px] uppercase tracking-[0.3em] text-rose">
               ikyu — handmade accessories
             </p>
-            <h1 className="mt-6 text-[30px] font-medium leading-[1.9] tracking-[0.08em] md:text-[44px]">
+            <h1 className="mt-6 text-[30px] font-normal leading-[1.9] tracking-[0.08em] md:text-[44px]">
               暮らしに花が
               <br className="md:hidden" />
               咲きますように。
@@ -39,17 +40,20 @@ export default function HomePage() {
             </p>
           </div>
         </Container>
-        <div className="animate-fade-rise-delay mt-14 md:mt-20">
-          <div className="relative aspect-[4/5] w-full sm:aspect-[3/2]">
-            <Image
-              src="/images/atelier-flowers.webp"
-              alt="アトリエの作業台。籠いっぱいのドライフラワーのそばで、ピンセットで小さな花を選ぶ作り手の手元"
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover object-[62%_50%]"
-            />
-          </div>
+        <div className="mt-14 md:mt-20">
+          <HeroImage
+            alt="アトリエの作業台。籠いっぱいのドライフラワーのそばで、ピンセットで小さな花を選ぶ作り手の手元"
+            mobile={{
+              src: "/images/atelier-flowers-tall.webp",
+              width: 1080,
+              height: 1350,
+            }}
+            desktop={{
+              src: "/images/atelier-flowers.webp",
+              width: 1537,
+              height: 1023,
+            }}
+          />
         </div>
       </Section>
 

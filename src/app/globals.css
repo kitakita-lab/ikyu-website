@@ -18,8 +18,8 @@
   --font-serif: var(--font-zen-old-mincho), "Hiragino Mincho ProN",
     "Yu Mincho", serif;
   --font-display: var(--font-cormorant), "Times New Roman", serif;
-  --font-sans: var(--font-noto-sans-jp), "Hiragino Kaku Gothic ProN",
-    sans-serif;
+  --font-sans: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic",
+    "Meiryo", sans-serif;
 }
 
 html {
@@ -45,33 +45,13 @@ body {
   outline-offset: 3px;
 }
 
-/* ヒーローの静かな入場(モーションはこれとhoverのみ) */
-@keyframes fade-rise {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-rise {
-  animation: fade-rise 0.9s ease-out both;
-}
-
-.animate-fade-rise-delay {
-  animation: fade-rise 0.9s ease-out 0.25s both;
-}
-
+/*
+ * モーションは hover の transition のみ。
+ * 入場アニメーションは LCP(最初の表示の速さ=体感の上質さ)を優先して使わない。
+ */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-  }
-  .animate-fade-rise,
-  .animate-fade-rise-delay {
-    animation: none;
   }
   *,
   *::before,

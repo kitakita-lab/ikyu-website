@@ -135,7 +135,7 @@ export default function CarePage() {
               <li key={item.step} className="flex gap-7">
                 <span
                   aria-hidden="true"
-                  className="mt-1 shrink-0 font-display text-[15px] tracking-[0.2em] text-rose-soft"
+                  className="mt-1 shrink-0 font-display text-[15px] tracking-[0.2em] text-rose"
                 >
                   {item.step}
                 </span>

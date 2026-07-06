@@ -99,7 +99,7 @@ export function MobileNav() {
                 href={site.instagram.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-sans text-[12px] tracking-[0.16em] text-rose"
+                className="inline-block py-2 font-sans text-[12px] tracking-[0.16em] text-rose"
               >
                 Instagram
                 <span className="sr-only">(外部サイトが開きます)</span>
@@ -108,7 +108,7 @@ export function MobileNav() {
                 href={site.minne.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-sans text-[12px] tracking-[0.16em] text-rose"
+                className="inline-block py-2 font-sans text-[12px] tracking-[0.16em] text-rose"
               >
                 minne
                 <span className="sr-only">(外部サイトが開きます)</span>

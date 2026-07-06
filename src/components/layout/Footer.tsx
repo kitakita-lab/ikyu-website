@@ -26,12 +26,12 @@ export function Footer() {
               <p className="font-display text-[12px] uppercase tracking-[0.24em] text-rose">
                 Menu
               </p>
-              <ul className="mt-4 space-y-3">
+              <ul className="mt-3 space-y-1">
                 {nav.map((item) => (
                   <li key={item.href}>
                     <Link
                       href={item.href}
-                      className="font-sans text-[12px] tracking-[0.16em] transition-colors duration-300 hover:text-rose"
+                      className="inline-block py-1.5 font-sans text-[12px] tracking-[0.16em] transition-colors duration-300 hover:text-rose"
                     >
                       {item.label}
                     </Link>
@@ -44,13 +44,13 @@ export function Footer() {
               <p className="font-display text-[12px] uppercase tracking-[0.24em] text-rose">
                 Follow
               </p>
-              <ul className="mt-4 space-y-3">
+              <ul className="mt-3 space-y-1">
                 <li>
                   <a
                     href={site.instagram.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-sans text-[12px] tracking-[0.16em] transition-colors duration-300 hover:text-rose"
+                    className="inline-block py-1.5 font-sans text-[12px] tracking-[0.16em] transition-colors duration-300 hover:text-rose"
                   >
                     Instagram
                     <span className="sr-only">(外部サイトが開きます)</span>
@@ -61,7 +61,7 @@ export function Footer() {
                     href={site.minne.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-sans text-[12px] tracking-[0.16em] transition-colors duration-300 hover:text-rose"
+                    className="inline-block py-1.5 font-sans text-[12px] tracking-[0.16em] transition-colors duration-300 hover:text-rose"
                   >
                     minne
                     <span className="sr-only">(外部サイトが開きます)</span>
