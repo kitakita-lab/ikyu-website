@@ -19,6 +19,16 @@ export type NewsPost = {
 };
 
 /**
+ * 「次の出店」常設枠。決まったら値を入れ、終わったら null に戻します。
+ * null のあいだは「準備中」の文言が表示されます(空白ではなく約束を見せる)。
+ */
+export const upcomingEvent: {
+  name: string;
+  dateText: string; // 例: "2026年8月23日(日) 11:00-17:00"
+  venue: string; // 例: "○○ホール(札幌市中央区)"
+} | null = null;
+
+/**
  * お知らせの追加はこの配列の先頭に足すだけです(新しい順)。
  * slug は URL になります(半角英数とハイフン)。
  */

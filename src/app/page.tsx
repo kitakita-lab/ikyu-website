@@ -25,9 +25,9 @@ export default function HomePage() {
         <Container>
           <div>
             <p className="font-display text-[13px] uppercase tracking-[0.3em] text-rose">
-              ikyu — handmade accessories
+              Handmade in Sapporo
             </p>
-            <h1 className="mt-6 text-[30px] font-normal leading-[1.9] tracking-[0.08em] md:text-[44px]">
+            <h1 className="mt-6 text-[32px] font-normal leading-[1.6] tracking-[0.08em] md:text-[54px]">
               暮らしに花が
               <br className="md:hidden" />
               咲きますように。
@@ -68,7 +68,7 @@ export default function HomePage() {
           </Heading>
           <div className="mt-8 space-y-6 text-[15px] leading-[2.4]">
             <p>
-              お気に入りのピアスをつけた朝、鏡の前で、すこし背筋が伸びる。
+              お気に入りのピアスをつけた朝、鏡の前で背筋が伸びる。
               いつもの装いに、ひとつぶの光が加わる。
               今日という日が、ちょっとだけ好きになる。
             </p>
@@ -88,10 +88,10 @@ export default function HomePage() {
       <Section tone="soft" aria-labelledby="collection-heading">
         <Container>
           <div className="grid items-center gap-12 md:grid-cols-2 md:gap-16">
-            <div className="relative order-2 aspect-square w-full md:order-1">
+            <div className="relative order-2 aspect-[1200/930] w-full md:order-1">
               <Image
-                src="/images/flatlay.webp"
-                alt="白い布の上に並ぶikyuの作品。ゴールドのネックレスとバングル、虹色にきらめく透明なビーズのイヤリング"
+                src="/images/flatlay-top.webp"
+                alt="白い布の上に並ぶikyuの作品。ゴールドのネックレスとバングル、虹色にきらめく透明なビーズのイヤリング、刺繍レースのカフ"
                 fill
                 sizes="(min-width: 768px) 50vw, 100vw"
                 className="object-cover"
@@ -124,15 +124,14 @@ export default function HomePage() {
             <div>
               <Eyebrow>About</Eyebrow>
               <Heading as="h2" id="maker-heading" className="mt-4">
-                つくる人の顔が見える
+                作り手の手から、
                 <br />
-                ブランドでありたい。
+                あなたの手へ。
               </Heading>
               <p className="mt-6 text-[14px] leading-[2.3] text-ink-soft md:text-[15px]">
                 市場で生花を選び、アトリエでドライフラワーに育て、
                 ひとつずつ手しごとで仕上げる。
-                ikyuの作品は、作り手の手から、あなたの手へ。
-                イベント会場では、直接お会いできる日もあります。
+                イベント会場では、つくり手と直接お会いいただける日もあります。
               </p>
               <div className="mt-9">
                 <ArrowLink href="/about">つくり手に会いにいく</ArrowLink>
@@ -140,8 +139,8 @@ export default function HomePage() {
             </div>
             <div className="relative aspect-[4/3] w-full">
               <Image
-                src="/images/event-booth.webp"
-                alt="イベント出店の様子。ドライフラワーと作品が並ぶブースで、お客様と笑顔で言葉を交わす作り手"
+                src="/images/atelier-hands.webp"
+                alt="ペンチを手に、透明な花のビーズのピアスを仕上げる作り手の手元。そばには完成した作品が並ぶ白い小皿"
                 fill
                 sizes="(min-width: 768px) 50vw, 100vw"
                 className="object-cover"
@@ -151,18 +150,21 @@ export default function HomePage() {
         </Container>
       </Section>
 
-      {/* CARE:長く愛されるブランドであることの宣言 */}
-      <Section tone="soft" space="compact" aria-labelledby="care-heading">
+      {/*
+       * CARE:長く愛されるブランドであることの宣言。
+       * ここだけ英字ラベルを外し、大きな一行だけを置く「見せ場」にする
+       * (同型セクションの反復を断ち、修理の約束=ikyuの差別化を最も静かな形で立てる)
+       */}
+      <Section tone="soft" aria-labelledby="care-heading">
         <Container width="narrow" className="text-center">
-          <Eyebrow>Care</Eyebrow>
-          <Heading as="h2" id="care-heading" className="mt-4">
+          <Heading as="h2" id="care-heading" display>
             永く、そばに。
           </Heading>
-          <p className="mt-5 text-[14px] leading-[2.2] text-ink-soft md:text-[15px]">
+          <p className="mt-7 text-[14px] leading-[2.2] text-ink-soft md:text-[15px]">
             ikyuの作品は、お手入れやお直しのご相談をいつでも承っています。
             お迎えいただいた日から、おつきあいが始まります。
           </p>
-          <div className="mt-8">
+          <div className="mt-9">
             <ArrowLink href="/care">お手入れと修理のこと</ArrowLink>
           </div>
         </Container>
@@ -206,23 +208,30 @@ export default function HomePage() {
         </Container>
       </Section>
 
-      {/* Instagram:いちばん近い場所への誘導 */}
+      {/*
+       * Instagram:いちばん近い場所への誘導。
+       * 直前のCARE(中央揃えの見せ場)と形を変え、左揃えで静かに結ぶ。
+       * アンダースコア入りのIDはボタンから外し、添え書きに退げる
+       */}
       <Section tone="soft" space="compact" aria-labelledby="instagram-heading">
-        <Container width="narrow" className="text-center">
+        <Container width="narrow">
           <Eyebrow>Instagram</Eyebrow>
           <Heading as="h2" id="instagram-heading" className="mt-4">
-            日々の制作と新作は、
+            アトリエの日々は、
             <br className="sm:hidden" />
             Instagramで。
           </Heading>
           <p className="mt-5 text-[14px] leading-[2.2] text-ink-soft md:text-[15px]">
-            作品のこと、出店のこと、アトリエの日々。
+            作品のこと、出店のこと、制作の途中のこと。
             いちばん近くでikyuを感じていただける場所です。
           </p>
-          <div className="mt-8">
+          <div className="mt-8 flex flex-wrap items-baseline gap-x-6 gap-y-3">
             <LinkButton href={site.instagram.url} external>
-              @{site.instagram.handle} をフォローする
+              Instagramでフォローする
             </LinkButton>
+            <p className="font-display text-[13px] tracking-[0.1em] text-ink-soft">
+              @{site.instagram.handle}
+            </p>
           </div>
         </Container>
       </Section>

@@ -5,7 +5,7 @@ import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Heading } from "@/components/ui/Heading";
 import { CtaBand } from "@/components/features/CtaBand";
-import { news, formatDate } from "@/content/news";
+import { news, upcomingEvent, formatDate } from "@/content/news";
 import { site } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -28,6 +28,32 @@ export default function NewsPage() {
             出店のご案内や新作のお知らせをお届けします。
             イベントでお会いできるのを、楽しみにしています。
           </p>
+
+          {/* 次の出店(常設枠)。未定の期間も空白ではなく「約束」を見せる */}
+          <div className="mt-14 border border-line px-7 py-8 md:px-10">
+            <p className="font-display text-[12px] uppercase tracking-[0.24em] text-rose">
+              Next Event
+            </p>
+            {upcomingEvent ? (
+              <dl className="mt-4 space-y-1">
+                <dt className="text-[16px] tracking-[0.06em]">
+                  {upcomingEvent.name}
+                </dt>
+                <dd className="text-[14px] leading-[2.1] text-ink-soft">
+                  {upcomingEvent.dateText}
+                  <span className="mx-2" aria-hidden="true">
+                    /
+                  </span>
+                  {upcomingEvent.venue}
+                </dd>
+              </dl>
+            ) : (
+              <p className="mt-4 text-[14px] leading-[2.1] text-ink-soft">
+                次の出店は、ただいま準備中です。
+                決まり次第、この場所とInstagramでお知らせします。
+              </p>
+            )}
+          </div>
 
           <ul className="mt-14 divide-y divide-line border-y border-line">
             {news.map((post) => (
@@ -62,7 +88,7 @@ export default function NewsPage() {
         links={[
           {
             href: site.instagram.url,
-            label: `@${site.instagram.handle} をフォローする`,
+            label: "Instagramでフォローする",
             external: true,
           },
         ]}

@@ -63,8 +63,7 @@ export default function AboutPage() {
               けれど、ほんとうに届けたいのは、花そのものではありません。
             </p>
             <p>
-              身につけた人の気持ちが、ふっと明るくなる瞬間。
-              今日をすこし好きになれる、その感覚。
+              身につけた人の気持ちが、ほんの一瞬、上を向く。
               わたしたちはそれを「花が咲く」と呼んでいます。
             </p>
             <p>
@@ -103,7 +102,7 @@ export default function AboutPage() {
                 <p>
                   色あわせも、配置も、金具の仕上げも、ひとつずつ手作業。
                   小さな作業の積みかさねが、日常で永く身につけられる丈夫さと、
-                  上品な佇まいをつくります。同じものは、ふたつとありません。
+                  上品な佇まいをつくります。
                 </p>
               </div>
             </div>
@@ -156,7 +155,7 @@ export default function AboutPage() {
           { href: "/news", label: "出店情報を見る" },
           {
             href: site.instagram.url,
-            label: `Instagram @${site.instagram.handle}`,
+            label: "Instagramでフォローする",
             external: true,
           },
         ]}

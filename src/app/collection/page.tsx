@@ -1,5 +1,5 @@
+import Image from "next/image";
 import type { Metadata } from "next";
-import { HeroImage } from "@/components/features/HeroImage";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -51,21 +51,23 @@ export default function CollectionPage() {
             作品のこと
           </Heading>
           <p className="mt-6 text-[14px] leading-[2.3] text-ink-soft md:text-[15px]">
-            その日の気持ちに、そっと寄り添う華やぎを。
-            ひとつずつ手しごとでうまれる、一点ものの作品たちです。
+            ひとつずつ手しごとでうまれる作品は、同じものがふたつとありません。
+            その日の装いに、ちいさな華やぎを添える一点ものたちです。
           </p>
         </Container>
-        <div className="mt-14 md:mt-20">
-          <HeroImage
-            alt="ikyuの作品の集合。ゴールドのスネークチェーンネックレス、バングル、虹色の透明ビーズのイヤリング、刺繍レースのリボン"
-            mobile={{ src: "/images/flatlay.webp", width: 1600, height: 1600 }}
-            desktop={{
-              src: "/images/flatlay-wide.webp",
-              width: 1600,
-              height: 900,
-            }}
-          />
-        </div>
+        {/* 作品写真は全幅で引き伸ばさず、余白の中に「一皿」として置く */}
+        <Container className="mt-14 md:mt-20">
+          <div className="relative mx-auto aspect-[1600/1000] w-full max-w-[720px]">
+            <Image
+              src="/images/flatlay-still.webp"
+              alt="白い布の上に並ぶikyuの作品。ゴールドのスネークチェーンネックレス、バングル、虹色の透明ビーズのイヤリング、刺繍レースのカフ"
+              fill
+              priority
+              sizes="(min-width: 800px) 720px, 100vw"
+              className="object-cover"
+            />
+          </div>
+        </Container>
       </Section>
 
       {/* 作品の3つの持ち味 */}
@@ -130,8 +132,8 @@ export default function CollectionPage() {
       <CtaBand
         tone="base"
         eyebrow="Story"
-        title="作品のうしろには、物語があります。"
-        body="花を選ぶところから始まる、ikyuの手しごとのこと。つくり手のことも、ぜひ知ってください。"
+        title="一輪が作品になるまでのこと。"
+        body="市場で選んだ生花を乾かし、いちばん表情のいい瞬間をとじこめる。その手しごとと、つくり手のことをご紹介しています。"
         links={[{ href: "/about", label: "ikyuとつくり手のこと" }]}
       />
     </>
