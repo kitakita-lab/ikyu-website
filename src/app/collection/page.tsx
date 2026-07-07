@@ -19,18 +19,40 @@ export const metadata: Metadata = {
   },
 };
 
-const highlights = [
+/**
+ * 作品ギャラリー。文章は写真の余韻に一行だけ添える(写真が主役)。
+ * 耳元の着用カットが撮影でき次第、この配列に1枠追加する。
+ */
+const works = [
   {
-    title: "透明を、かさねる",
-    body: "ガラスやレジンの粒が、光をすくいあげてやわらかくきらめく。派手ではないのに、ふと目をひく透明感。ikyuの作品のいちばんの持ち味です。",
+    src: "/images/product-hoops.webp",
+    alt: "白いサテンの上に並ぶ、金の花びらのフープピアス2組。花芯には押し花をとじこめた透明な球",
+    caption: "金の光を、まとう",
   },
   {
-    title: "金の光を、まとう",
-    body: "肌になじむ細いゴールドのライン。カジュアルな装いにも、きれいめの日にも。毎日そばに置きたくなる、ちょうどいい輝きを選んでいます。",
+    src: "/images/product-cluster.webp",
+    alt: "グレージュの背景の中、アクリルスタンドで揺れる透明ビーズのクラスターピアス",
+    caption: "透明を、かさねる",
   },
   {
-    title: "季節を、とじこめる",
-    body: "生花から育てたドライフラワーを、いちばん美しい姿のままレジンの中へ。その季節、その一輪だけの色が、あなたの毎日に寄り添います。",
+    src: "/images/product-ring.webp",
+    alt: "白いシアーな袖の手元。押し花をとじこめたレジンと細いゴールドのリングに、窓からの光の筋が差す",
+    caption: "指先にも、花をひとつ",
+  },
+  {
+    src: "/images/product-blooms.webp",
+    alt: "白い陶器のトレイの上、ブランドカードに留められた小さな白いかすみ草のスタッドピアス",
+    caption: "季節を、とじこめる",
+  },
+  {
+    src: "/images/product-bangles.webp",
+    alt: "ヴィンテージのガラスの器に掛かる2本のバングル。ゴールドのツイストと、押し花をとじこめた透明なレジン",
+    caption: "暮らしの景色になじむ",
+  },
+  {
+    src: "/images/wear-necklace.webp",
+    alt: "白いキャミソールとブラウンのカーディガンの首もとに、華奢なゴールドのチョーカー",
+    caption: "いつもの装いのそばに",
   },
 ] as const;
 
@@ -55,43 +77,43 @@ export default function CollectionPage() {
             その日の装いに、ちいさな華やぎを添える一点ものたちです。
           </p>
         </Container>
-        {/* 作品写真は全幅で引き伸ばさず、余白の中に「一皿」として置く */}
+        {/* 主役の1枚:作品を「もの」ではなく「手から手へ」の気配で見せる */}
         <Container className="mt-14 md:mt-20">
-          <div className="relative mx-auto aspect-[1600/1000] w-full max-w-[720px]">
+          <div className="relative mx-auto aspect-[2137/2256] w-full max-w-[640px]">
             <Image
-              src="/images/flatlay-still.webp"
-              alt="白い布の上に並ぶikyuの作品。ゴールドのスネークチェーンネックレス、バングル、虹色の透明ビーズのイヤリング、刺繍レースのカフ"
+              src="/images/collection-hands.webp"
+              alt="ゴールドのチューリップと、すずらんのように連なる白い小花のロングピアスを、指先でそっと掲げた手元"
               fill
               priority
-              sizes="(min-width: 800px) 720px, 100vw"
+              sizes="(min-width: 720px) 640px, 100vw"
               className="object-cover"
             />
           </div>
         </Container>
       </Section>
 
-      {/* 作品の3つの持ち味 */}
-      <Section aria-labelledby="highlights-heading">
+      {/* 作品ギャラリー:写真が主役。言葉はキャプション一行に退く */}
+      <Section aria-labelledby="works-heading">
         <Container>
-          <h2 id="highlights-heading" className="sr-only">
-            ikyuの作品の持ち味
+          <h2 id="works-heading" className="sr-only">
+            作品のいろいろ
           </h2>
-          <div className="grid gap-14 md:grid-cols-3 md:gap-10">
-            {highlights.map((item, i) => (
-              <div key={item.title}>
-                <p
-                  aria-hidden="true"
-                  className="font-display text-[15px] tracking-[0.24em] text-rose"
-                >
-                  {String(i + 1).padStart(2, "0")}
-                </p>
-                <Heading as="h3" className="mt-3">
-                  {item.title}
-                </Heading>
-                <p className="mt-4 text-[14px] leading-[2.3] text-ink-soft">
-                  {item.body}
-                </p>
-              </div>
+          <div className="grid grid-cols-2 gap-x-5 gap-y-10 md:grid-cols-3 md:gap-x-10 md:gap-y-14">
+            {works.map((work) => (
+              <figure key={work.src}>
+                <div className="relative aspect-[4/5] w-full">
+                  <Image
+                    src={work.src}
+                    alt={work.alt}
+                    fill
+                    sizes="(min-width: 768px) 33vw, 50vw"
+                    className="object-cover"
+                  />
+                </div>
+                <figcaption className="mt-4 text-center text-[13px] tracking-[0.1em] text-ink-soft">
+                  {work.caption}
+                </figcaption>
+              </figure>
             ))}
           </div>
         </Container>

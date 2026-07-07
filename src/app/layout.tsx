@@ -43,7 +43,7 @@ export const metadata: Metadata = {
         url: "/images/og.jpg",
         width: 1200,
         height: 630,
-        alt: "ikyuのアクセサリー。ゴールドのネックレスやバングル、透明感のあるピアス",
+        alt: "白い布を背景に、アクリルスタンドで揺れるikyuのピアス。金の花びらと白い小花、細いゴールドのライン",
       },
     ],
   },

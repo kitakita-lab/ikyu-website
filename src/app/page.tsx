@@ -88,10 +88,10 @@ export default function HomePage() {
       <Section tone="soft" aria-labelledby="collection-heading">
         <Container>
           <div className="grid items-center gap-12 md:grid-cols-2 md:gap-16">
-            <div className="relative order-2 aspect-[1200/930] w-full md:order-1">
+            <div className="relative order-2 aspect-[2841/2670] w-full md:order-1">
               <Image
-                src="/images/flatlay-top.webp"
-                alt="白い布の上に並ぶikyuの作品。ゴールドのネックレスとバングル、虹色にきらめく透明なビーズのイヤリング、刺繍レースのカフ"
+                src="/images/product-stand.webp"
+                alt="白い布を背景に、アクリルスタンドで揺れるikyuのピアス。金の花びらから、白い小花と細いゴールドのラインが垂れる"
                 fill
                 sizes="(min-width: 768px) 50vw, 100vw"
                 className="object-cover"
