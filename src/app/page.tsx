@@ -21,11 +21,13 @@ export default function HomePage() {
     <>
       {/*
        * ヒーロー:言葉と「金の花」(ブランドを代表する作品)を最初の一画面に並べる。
-       * 写真はすべて実際の作品写真(AI生成画像は使わない)
+       * 写真はすべて実際の作品写真(AI生成画像は使わない)。
+       * 構図は撮影されたままの2組(4輪)を尊重し、作品を絶対に途中で切らない。
+       * 4:5の全身が1366x768のノートPCでも初画面に収まるよう、50:50で組む
        */}
       <Section space="compact">
         <Container>
-          <div className="grid items-center gap-10 md:grid-cols-[11fr_9fr] md:gap-16">
+          <div className="grid items-center gap-10 md:grid-cols-2 md:gap-16">
             <div>
               <p className="font-display text-[12px] uppercase tracking-[0.3em] text-rose">
                 Handmade in Sapporo
@@ -46,13 +48,13 @@ export default function HomePage() {
                 <ArrowLink href="/collection">作品を見る</ArrowLink>
               </div>
             </div>
-            <div className="relative aspect-[1936/1290] w-full">
+            <div className="relative aspect-[4/5] w-full">
               <Image
-                src="/images/hero-hoops.webp"
-                alt="白いサテンの上に並ぶ、金の花びらのフープピアス。花芯には押し花をとじこめた透明な球"
+                src="/images/product-hoops.webp"
+                alt="白いサテンの上に並ぶ、金の花びらのフープピアス2組。花芯には押し花をとじこめた透明な球と、透明ビーズの飾りが揺れる"
                 fill
                 priority
-                sizes="(min-width: 768px) 45vw, 100vw"
+                sizes="(min-width: 768px) 50vw, 100vw"
                 className="object-cover"
               />
             </div>
