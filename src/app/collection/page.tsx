@@ -155,7 +155,7 @@ export default function CollectionPage() {
         tone="base"
         eyebrow="Story"
         title="一輪が作品になるまでのこと。"
-        body="市場で選んだ生花を乾かし、いちばん表情のいい瞬間をとじこめる。その手しごとと、つくり手のことをご紹介しています。"
+        body="花屋さんで選んだ生花を乾かし、いちばん表情のいい瞬間をとじこめる。その手しごとと、つくり手のことをご紹介しています。"
         links={[{ href: "/about", label: "ikyuとつくり手のこと" }]}
       />
     </>

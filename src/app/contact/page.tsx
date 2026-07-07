@@ -10,7 +10,7 @@ import { site } from "@/content/site";
 export const metadata: Metadata = {
   title: "CONTACT お問い合わせ",
   description:
-    "ikyuへのお問い合わせはInstagramのDMからどうぞ。作品のこと、修理・お直しのこと、イベント出店のこと、お気軽にご連絡ください。",
+    "ikyuへのお問い合わせはInstagramのDMからどうぞ。作品のこと、お直しのこと、イベント出店のこと、お気軽にご連絡ください。",
   alternates: { canonical: "/contact" },
 };
 
@@ -24,7 +24,7 @@ export default function ContactPage() {
             お問い合わせ
           </Heading>
           <p className="mt-6 text-[14px] leading-[2.3] text-ink-soft md:text-[15px]">
-            作品のこと、修理やお直しのこと、イベントのこと。
+            作品のこと、お直しのこと、イベントのこと。
             どんなことでも、お気軽にお声がけください。
           </p>
         </Container>
@@ -37,7 +37,7 @@ export default function ContactPage() {
           </Heading>
           <p className="mx-auto mt-5 max-w-[480px] text-[14px] leading-[2.3] text-ink-soft md:text-[15px]">
             ikyuへのご連絡は、InstagramのDM(ダイレクトメッセージ)で承っています。
-            修理のご相談は、作品のお写真を添えていただけるとスムーズです。
+            お直しのご相談は、作品のお写真を添えていただけるとスムーズです。
           </p>
           <div className="mt-9">
             <LinkButton href={site.instagram.dmUrl} external>
@@ -85,12 +85,12 @@ export default function ContactPage() {
             </div>
             <div>
               <dt>
-                <Heading as="h3">修理・お直しのご相談</Heading>
+                <Heading as="h3">お直しのご相談</Heading>
               </dt>
               <dd className="mt-3 text-[14px] leading-[2.3] text-ink-soft md:text-[15px]">
-                修理の流れやよくあるご質問は、CAREのページにまとめています。
+                ご相談の流れやよくあるご質問は、CAREのページにまとめています。
                 <span className="mt-3 block">
-                  <ArrowLink href="/care">お手入れと修理のこと</ArrowLink>
+                  <ArrowLink href="/care">お手入れとお直しのこと</ArrowLink>
                 </span>
               </dd>
             </div>

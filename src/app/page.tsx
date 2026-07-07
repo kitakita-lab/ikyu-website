@@ -1,6 +1,5 @@
 import Image from "next/image";
 import type { Metadata } from "next";
-import { HeroImage } from "@/components/features/HeroImage";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -20,41 +19,45 @@ export default function HomePage() {
 
   return (
     <>
-      {/* ヒーロー:コピーが先、写真があとに続く(言葉のブランドであることを最初に示す) */}
-      <Section space="compact" className="pb-0 md:pb-0">
+      {/*
+       * ヒーロー:言葉と「金の花」(ブランドを代表する作品)を最初の一画面に並べる。
+       * 写真はすべて実際の作品写真(AI生成画像は使わない)
+       */}
+      <Section space="compact">
         <Container>
-          <div>
-            <p className="font-display text-[13px] uppercase tracking-[0.3em] text-rose">
-              Handmade in Sapporo
-            </p>
-            <h1 className="mt-6 text-[32px] font-normal leading-[1.6] tracking-[0.08em] md:text-[54px]">
-              暮らしに花が
-              <br className="md:hidden" />
-              咲きますように。
-            </h1>
-            <p className="mt-6 max-w-[560px] text-[14px] leading-[2.3] text-ink-soft md:text-[15px]">
-              ikyuは、北海道札幌のアトリエからうまれる
-              ハンドメイドアクセサリーのブランドです。
-              身につけるたび、気持ちがすこし明るくなる。
-              そんな「花」をお届けしています。
-            </p>
+          <div className="grid items-center gap-10 md:grid-cols-[11fr_9fr] md:gap-16">
+            <div>
+              <p className="font-display text-[12px] uppercase tracking-[0.3em] text-rose">
+                Handmade in Sapporo
+              </p>
+              {/* 2行で組む前提の見出し(1行に詰めると列幅で中途半端に折れる) */}
+              <h1 className="mt-6 text-[26px] font-normal leading-[1.7] tracking-[0.08em] md:text-[36px]">
+                暮らしに花が
+                <br />
+                咲きますように。
+              </h1>
+              <p className="mt-6 max-w-[560px] text-[14px] leading-[2.3] text-ink-soft md:text-[15px]">
+                ikyuは、北海道札幌のアトリエからうまれる
+                ハンドメイドアクセサリーのブランドです。
+                身につけるたび、気持ちがすこし明るくなる。
+                そんな「花」をお届けしています。
+              </p>
+              <div className="mt-9">
+                <ArrowLink href="/collection">作品を見る</ArrowLink>
+              </div>
+            </div>
+            <div className="relative aspect-[1936/1290] w-full">
+              <Image
+                src="/images/hero-hoops.webp"
+                alt="白いサテンの上に並ぶ、金の花びらのフープピアス。花芯には押し花をとじこめた透明な球"
+                fill
+                priority
+                sizes="(min-width: 768px) 45vw, 100vw"
+                className="object-cover"
+              />
+            </div>
           </div>
         </Container>
-        <div className="mt-14 md:mt-20">
-          <HeroImage
-            alt="アトリエの作業台。籠いっぱいのドライフラワーのそばで、ピンセットで小さな花を選ぶ作り手の手元"
-            mobile={{
-              src: "/images/atelier-flowers-tall.webp",
-              width: 1080,
-              height: 1350,
-            }}
-            desktop={{
-              src: "/images/atelier-flowers.webp",
-              width: 1537,
-              height: 1023,
-            }}
-          />
-        </div>
       </Section>
 
       {/* ブランド導入:「花」の再定義 */}
@@ -88,7 +91,12 @@ export default function HomePage() {
       <Section tone="soft" aria-labelledby="collection-heading">
         <Container>
           <div className="grid items-center gap-12 md:grid-cols-2 md:gap-16">
-            <div className="relative order-2 aspect-[2841/2670] w-full md:order-1">
+            {/* 写真自体も /collection へのリンクにする(押せる場所を増やす) */}
+            <Link
+              href="/collection"
+              className="relative order-2 block aspect-[2841/2670] w-full md:order-1"
+              aria-label="COLLECTION 作品のことを見る"
+            >
               <Image
                 src="/images/product-stand.webp"
                 alt="白い布を背景に、アクリルスタンドで揺れるikyuのピアス。金の花びらから、白い小花と細いゴールドのラインが垂れる"
@@ -96,7 +104,7 @@ export default function HomePage() {
                 sizes="(min-width: 768px) 50vw, 100vw"
                 className="object-cover"
               />
-            </div>
+            </Link>
             <div className="order-1 md:order-2">
               <Eyebrow>Collection</Eyebrow>
               <Heading as="h2" id="collection-heading" className="mt-4">
@@ -129,7 +137,7 @@ export default function HomePage() {
                 あなたの手へ。
               </Heading>
               <p className="mt-6 text-[14px] leading-[2.3] text-ink-soft md:text-[15px]">
-                市場で生花を選び、アトリエでドライフラワーに育て、
+                花屋さんで生花を選び、アトリエでドライフラワーに育て、
                 ひとつずつ手しごとで仕上げる。
                 イベント会場では、つくり手と直接お会いいただける日もあります。
               </p>
@@ -139,8 +147,8 @@ export default function HomePage() {
             </div>
             <div className="relative aspect-[4/3] w-full">
               <Image
-                src="/images/atelier-hands.webp"
-                alt="ペンチを手に、透明な花のビーズのピアスを仕上げる作り手の手元。そばには完成した作品が並ぶ白い小皿"
+                src="/images/top-gift.webp"
+                alt="金の花のピアスを留めたブランドカードを、お客様へ手渡すように掲げた作り手の手元"
                 fill
                 sizes="(min-width: 768px) 50vw, 100vw"
                 className="object-cover"
@@ -153,7 +161,7 @@ export default function HomePage() {
       {/*
        * CARE:長く愛されるブランドであることの宣言。
        * ここだけ英字ラベルを外し、大きな一行だけを置く「見せ場」にする
-       * (同型セクションの反復を断ち、修理の約束=ikyuの差別化を最も静かな形で立てる)
+       * (同型セクションの反復を断ち、お直しの相談窓口=ikyuの差別化を最も静かな形で立てる)
        */}
       <Section tone="soft" aria-labelledby="care-heading">
         <Container width="narrow" className="text-center">
@@ -165,7 +173,7 @@ export default function HomePage() {
             お迎えいただいた日から、おつきあいが始まります。
           </p>
           <div className="mt-9">
-            <ArrowLink href="/care">お手入れと修理のこと</ArrowLink>
+            <ArrowLink href="/care">お手入れとお直しのこと</ArrowLink>
           </div>
         </Container>
       </Section>

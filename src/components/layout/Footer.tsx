@@ -13,7 +13,6 @@ export function Footer() {
               alt="ikyu handmade accessories"
               width={140}
               height={26}
-              className="mix-blend-multiply"
             />
             <p className="mt-5 text-[14px] leading-[2.1]">{site.tagline}</p>
             <p className="mt-2 text-[12px] tracking-[0.08em] text-ink-soft">

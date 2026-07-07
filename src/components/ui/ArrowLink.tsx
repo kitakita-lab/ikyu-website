@@ -7,9 +7,12 @@ type Props = {
   className?: string;
 };
 
-/** 本文中の控えめな誘導リンク */
+/**
+ * 本文中の誘導リンク。
+ * 下線を常時表示し、hover前から「押せる場所」だと分かるようにする
+ */
 export function ArrowLink({ href, children, external = false, className = "" }: Props) {
-  const cls = `group inline-flex items-center gap-2 font-sans text-[13px] tracking-[0.14em] text-rose transition-colors duration-300 hover:text-ink ${className}`;
+  const cls = `group inline-flex items-center gap-2 font-sans text-[13px] tracking-[0.14em] text-rose underline decoration-rose/40 underline-offset-4 transition-colors duration-300 hover:text-ink hover:decoration-ink/40 ${className}`;
   const arrow = (
     <span
       aria-hidden="true"

@@ -17,13 +17,13 @@ export function Header() {
           className="shrink-0"
           aria-label="ikyu ホームへ戻る"
         >
+          {/* ロゴは透過PNG(文字色=ink)。ブレンドに頼らず素直に載せる */}
           <Image
             src="/images/logo.png"
             alt="ikyu handmade accessories"
             width={122}
             height={23}
             priority
-            className="mix-blend-multiply"
           />
         </Link>
 

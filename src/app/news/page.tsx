@@ -35,16 +35,29 @@ export default function NewsPage() {
               Next Event
             </p>
             {upcomingEvent ? (
-              <dl className="mt-4 space-y-1">
+              <dl className="mt-4 space-y-2">
                 <dt className="text-[16px] tracking-[0.06em]">
                   {upcomingEvent.name}
+                  {/* 「予定」と「確定」を必ず区別して表示する */}
+                  <span className="ml-3 align-middle border border-rose/50 px-2 py-0.5 font-sans text-[11px] tracking-[0.12em] text-rose">
+                    出店{upcomingEvent.status}
+                  </span>
                 </dt>
                 <dd className="text-[14px] leading-[2.1] text-ink-soft">
                   {upcomingEvent.dateText}
-                  <span className="mx-2" aria-hidden="true">
-                    /
-                  </span>
-                  {upcomingEvent.venue}
+                  {upcomingEvent.venue && (
+                    <>
+                      <span className="mx-2" aria-hidden="true">
+                        /
+                      </span>
+                      {upcomingEvent.venue}
+                    </>
+                  )}
+                  {upcomingEvent.status === "予定" && (
+                    <span className="mt-1 block text-[13px]">
+                      くわしくは決まり次第、こちらとInstagramでお知らせします。
+                    </span>
+                  )}
                 </dd>
               </dl>
             ) : (

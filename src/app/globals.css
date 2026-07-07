@@ -3,14 +3,16 @@
 /*
   ikyu design tokens
   - 背景は温かみのある生成り。純白・純黒は使わない
+  - 文字とボタンの基本色は黒ではなく「濃い茶」(ブランドオーナーの意向。
+    ロゴの文字色とも揃えている)
   - アクセントは「乾いた花のロゼ」1色のみ(リンク/ラベル/フォーカス)
-  - コントラストは全組み合わせで WCAG AA 以上(本文は AAA)を検証済み
+  - コントラストは全組み合わせで WCAG AA 以上を維持すること
 */
 @theme {
   --color-base: #faf8f5;
   --color-base-soft: #f3ede4;
-  --color-ink: #3a3532;
-  --color-ink-soft: #6e645d;
+  --color-ink: #45362f;
+  --color-ink-soft: #7a685e;
   --color-rose: #8e5f66;
   --color-rose-soft: #b08a8f;
   --color-line: #e7dfd3;

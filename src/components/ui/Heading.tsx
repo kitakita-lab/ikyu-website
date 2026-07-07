@@ -22,12 +22,12 @@ export function Heading({
   className = "",
 }: Props) {
   const size = display
-    ? "text-[26px] leading-[1.6] md:text-[40px]"
+    ? "text-[22px] leading-[1.6] md:text-[32px]"
     : Tag === "h1"
-      ? "text-[28px] leading-[1.6] md:text-[42px]"
+      ? "text-[24px] leading-[1.6] md:text-[34px]"
       : Tag === "h2"
-        ? "text-[22px] leading-[1.7] md:text-[30px]"
-        : "text-[18px] leading-[1.8] md:text-[20px]";
+        ? "text-[19px] leading-[1.7] md:text-[25px]"
+        : "text-[16px] leading-[1.8] md:text-[18px]";
   return (
     <Tag id={id} className={`font-normal tracking-[0.06em] ${size} ${className}`}>
       {children}
