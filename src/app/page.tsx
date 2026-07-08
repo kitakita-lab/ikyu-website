@@ -6,7 +6,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Heading } from "@/components/ui/Heading";
 import { ArrowLink } from "@/components/ui/ArrowLink";
 import { LinkButton } from "@/components/ui/LinkButton";
-import { news, formatDate } from "@/content/news";
+import { news, upcomingEvent, formatDate } from "@/content/news";
 import { site } from "@/content/site";
 import Link from "next/link";
 
@@ -39,7 +39,7 @@ export default function HomePage() {
                 咲きますように。
               </h1>
               <p className="mt-6 max-w-[560px] text-[14px] leading-[2.3] text-ink-soft md:text-[15px]">
-                ikyuは、北海道札幌のアトリエからうまれる
+                ikyuは、北海道札幌でうまれる
                 ハンドメイドアクセサリーのブランドです。
                 身につけるたび、気持ちがすこし明るくなる。
                 そんな「花」をお届けしています。
@@ -78,8 +78,7 @@ export default function HomePage() {
               今日という日が、ちょっとだけ好きになる。
             </p>
             <p>
-              ikyuの「花」は、そんな気持ちの動きのことです。
-              アクセサリーは、そのための小さなきっかけ。
+              ikyuの「花」は、そんな気持ちの動きのこと。
               あなたの毎日に、花が咲きますように。
             </p>
           </div>
@@ -115,9 +114,8 @@ export default function HomePage() {
                 そっと華やぎを。
               </Heading>
               <p className="mt-6 text-[14px] leading-[2.3] text-ink-soft md:text-[15px]">
-                光をすくいあげる透明なガラスやレジン。肌になじむ金の細いライン。
-                いちばん美しい姿でとじこめた、季節の花。
-                日常になじみながら、ふとした瞬間に心をほどく作品たちです。
+                光をすくいあげる透明、肌になじむ金、とじこめた季節の花。
+                ふとした瞬間に、心をほどく作品たちです。
               </p>
               <div className="mt-9">
                 <LinkButton href="/collection">作品を見る</LinkButton>
@@ -139,7 +137,7 @@ export default function HomePage() {
                 あなたの手へ。
               </Heading>
               <p className="mt-6 text-[14px] leading-[2.3] text-ink-soft md:text-[15px]">
-                花屋さんで生花を選び、アトリエでドライフラワーに育て、
+                花屋さんで選んだ生花を、ドライフラワーに育て、
                 ひとつずつ手しごとで仕上げる。
                 イベント会場では、つくり手と直接お会いいただける日もあります。
               </p>
@@ -192,6 +190,15 @@ export default function HomePage() {
             </div>
             <ArrowLink href="/news">一覧へ</ArrowLink>
           </div>
+          {/* 「これから」の気配:次の出店をTOPにも一行だけ */}
+          {upcomingEvent && (
+            <p className="mt-6 text-[13px] leading-[2] tracking-[0.04em] text-ink-soft">
+              <span className="mr-3 border border-rose/50 px-2 py-0.5 font-sans text-[11px] tracking-[0.12em] text-rose">
+                次の出店・{upcomingEvent.status}
+              </span>
+              {upcomingEvent.name}({upcomingEvent.dateText})
+            </p>
+          )}
           <ul className="mt-10 divide-y divide-line border-y border-line">
             {latestNews.map((post) => (
               <li key={post.slug}>
@@ -227,7 +234,7 @@ export default function HomePage() {
         <Container width="narrow">
           <Eyebrow>Instagram</Eyebrow>
           <Heading as="h2" id="instagram-heading" className="mt-4">
-            アトリエの日々は、
+            制作の日々は、
             <br className="sm:hidden" />
             Instagramで。
           </Heading>

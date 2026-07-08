@@ -10,7 +10,7 @@ import { site } from "@/content/site";
 export const metadata: Metadata = {
   title: "ikyuとつくり手のこと",
   description:
-    "「暮らしに花が咲きますように。」ikyuのコンセプトと、生花からドライフラワーを育てて作品にするまでの手しごと、札幌のアトリエでつくる作り手のことをご紹介します。",
+    "「暮らしに花が咲きますように。」ikyuのコンセプトと、生花からドライフラワーを育てて作品にするまでの手しごと、札幌の作り手のことをご紹介します。",
   alternates: { canonical: "/about" },
   openGraph: {
     title: "ikyuとつくり手のこと | ikyu",
@@ -87,7 +87,7 @@ export default function AboutPage() {
           </Heading>
           <div className="mt-6 space-y-5 text-[14px] leading-[2.3] text-ink-soft md:text-[15px]">
             <p>
-              花屋さんで選んだ生花を、アトリエでゆっくりとドライフラワーへ。
+              花屋さんで選んだ生花を、時間をかけてドライフラワーへ。
               いちばん表情のいい瞬間を見きわめて、レジンにとじこめます。
             </p>
             <p>

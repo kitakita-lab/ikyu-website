@@ -21,7 +21,10 @@ export const metadata: Metadata = {
 
 /**
  * 作品ギャラリー。文章は写真の余韻に一行だけ添える(写真が主役)。
- * 耳元の着用カットが撮影でき次第、この配列に1枠追加する。
+ *
+ * 【8月撮影後の追加手順】ファイルを public/images に置き、配列に足すだけ。
+ * 着用カットは配列の先頭へ(例):
+ *   { src: "/images/wear-ear.webp", alt: "耳もとで揺れる金の花のピアス(横顔)", caption: "耳もとで、ゆれる" },
  */
 const works = [
   {
@@ -55,6 +58,13 @@ const works = [
     caption: "いつもの装いのそばに",
   },
 ] as const;
+
+/**
+ * 素材マクロ(⑥の受け皿)。8月撮影後にここへ追加すると
+ * 「素材のこと」セクションが自動で現れます(空のあいだは非表示)。
+ * 例: { src: "/images/material-resin.webp", alt: "レジンの中の押し花のマクロ", caption: "レジンの中の、一輪" }
+ */
+const materials: { src: string; alt: string; caption: string }[] = [];
 
 const categories = [
   "ピアス / イヤリング",
@@ -118,6 +128,36 @@ export default function CollectionPage() {
           </div>
         </Container>
       </Section>
+
+      {/* 素材のこと(マクロ):写真が入り次第、自動で現れる受け皿 */}
+      {materials.length > 0 && (
+        <Section tone="soft" aria-labelledby="materials-heading">
+          <Container>
+            <Eyebrow>Material</Eyebrow>
+            <Heading as="h2" id="materials-heading" className="mt-4">
+              素材のこと
+            </Heading>
+            <div className="mt-10 grid grid-cols-2 gap-x-5 gap-y-10 md:grid-cols-3 md:gap-x-10">
+              {materials.map((m) => (
+                <figure key={m.src}>
+                  <div className="relative aspect-square w-full">
+                    <Image
+                      src={m.src}
+                      alt={m.alt}
+                      fill
+                      sizes="(min-width: 768px) 33vw, 50vw"
+                      className="object-cover"
+                    />
+                  </div>
+                  <figcaption className="mt-4 text-center text-[13px] tracking-[0.1em] text-ink-soft">
+                    {m.caption}
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          </Container>
+        </Section>
+      )}
 
       {/* アイテムとお迎えの案内 */}
       <Section tone="soft" aria-labelledby="items-heading">

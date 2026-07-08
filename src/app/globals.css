@@ -10,12 +10,14 @@
 */
 @theme {
   --color-base: #faf8f5;
-  --color-base-soft: #f3ede4;
+  /* base-soft は「砂・紙・木肌」を感じる暖かい面(Japandi Natural)。
+     文字色との組み合わせは WCAG AA を数値検証済み */
+  --color-base-soft: #f1e8da;
   --color-ink: #45362f;
-  --color-ink-soft: #7a685e;
-  --color-rose: #8e5f66;
+  --color-ink-soft: #75635a;
+  --color-rose: #8a5b62;
   --color-rose-soft: #b08a8f;
-  --color-line: #e7dfd3;
+  --color-line: #e4d8c5;
 
   --font-serif: var(--font-zen-old-mincho), "Hiragino Mincho ProN",
     "Yu Mincho", serif;
