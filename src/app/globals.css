@@ -40,6 +40,13 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* スマホのボトムナビ分、フッターが隠れないよう底に余白を確保 */
+@media (max-width: 767px) {
+  body {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom));
+  }
+}
+
 ::selection {
   background-color: color-mix(in srgb, var(--color-rose-soft) 35%, transparent);
 }

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Zen_Old_Mincho } from "next/font/google";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { BottomNav } from "@/components/layout/BottomNav";
 import { JsonLd } from "@/components/features/JsonLd";
 import { site } from "@/content/site";
 import "./globals.css";
@@ -102,6 +103,7 @@ export default function RootLayout({
         <Header />
         <main id="main">{children}</main>
         <Footer />
+        <BottomNav />
         <JsonLd data={organizationJsonLd} />
         <JsonLd data={webSiteJsonLd} />
       </body>
