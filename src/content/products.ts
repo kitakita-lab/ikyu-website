@@ -77,11 +77,7 @@ export const products: Product[] = [
         src: "/images/product-soap-bubble.webp",
         alt: "波形のアクリルスタンドに揺れるsoap bubble。しゃぼん玉のような虹色の透明ビーズに、窓の光と影が差す",
       },
-      // 別角度(ギャラリーに表示)
-      {
-        src: "/images/product-cluster.webp",
-        alt: "別角度から。クリアなスタンドで揺れる透明ビーズのきらめき",
-      },
+      // ★撮影後に追加: 別角度・着用写真など
     ],
     size: "—", // ★差し替え: 例)全長 約3cm
     material: "ガラスビーズ / 金属パーツ", // ★差し替え
