@@ -51,7 +51,7 @@ export default function HomePage() {
             <div className="relative aspect-[4/5] w-full">
               <Image
                 src="/images/product-hoops.webp"
-                alt="白いサテンの上に並ぶ、金の花びらのフープピアス2組。花芯には押し花をとじこめた透明な球と、透明ビーズの飾りが揺れる"
+                alt="白いサテンの上に並ぶ、金の花びらのフープピアス2組。花芯にはドライフラワーをとじこめた透明な球と、透明ビーズの飾りが揺れる"
                 fill
                 priority
                 sizes="(min-width: 768px) 50vw, 100vw"
