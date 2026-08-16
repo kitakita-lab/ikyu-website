@@ -86,8 +86,26 @@ export const events: BrandEvent[] = [
       { label: "生まれた一本", value: "フラワーボトル 220本" },
       { label: "参加費", value: "無料" },
     ],
-    // 写真は追って追加予定(届き次第、この配列に足すだけで表示されます)
-    photos: [],
+    photos: [
+      {
+        src: "/images/event-chikaho-booth.webp",
+        alt: "チカホ北三条広場のikyuブース。かごいっぱいのドライフラワーと花材の小瓶、アクセサリーの展示台",
+        width: 1600,
+        height: 1200,
+      },
+      {
+        src: "/images/event-chikaho-venue.webp",
+        alt: "地下歩行空間の会場のようす。大きなスクリーンの前で、テーブルを囲んでフラワーボトルづくりに参加するみなさん",
+        width: 1600,
+        height: 816,
+      },
+      {
+        src: "/images/event-chikaho-hands.webp",
+        alt: "かごから選んだドライフラワーを、はさみで整えてガラスの小瓶に詰めていく参加者の手元",
+        width: 1400,
+        height: 1710,
+      },
+    ],
     credit: "企画・運営:KitaKita Lab",
   },
 ];
