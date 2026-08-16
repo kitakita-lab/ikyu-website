@@ -50,8 +50,8 @@ export default function HomePage() {
             </div>
             <div className="relative aspect-[4/5] w-full">
               <Image
-                src="/images/product-hoops.webp"
-                alt="白いサテンの上に並ぶ、金の花びらのフープピアス2組。花芯にはドライフラワーをとじこめた透明な球と、透明ビーズの飾りが揺れる"
+                src="/images/hero-soap.webp"
+                alt="窓光の筋が差すなか、波形のアクリルスタンドで揺れるsoap bubble。しゃぼん玉のような虹色の透明ビーズが光をまとう"
                 fill
                 priority
                 sizes="(min-width: 768px) 50vw, 100vw"
