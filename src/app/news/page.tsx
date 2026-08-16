@@ -4,6 +4,7 @@ import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Heading } from "@/components/ui/Heading";
+import { ArrowLink } from "@/components/ui/ArrowLink";
 import { CtaBand } from "@/components/features/CtaBand";
 import { news, upcomingEvent, formatDate } from "@/content/news";
 import { site } from "@/content/site";
@@ -66,6 +67,9 @@ export default function NewsPage() {
                 決まり次第、この場所とInstagramでお知らせします。
               </p>
             )}
+            <div className="mt-5">
+              <ArrowLink href="/events">これまでのイベントの記録</ArrowLink>
+            </div>
           </div>
 
           <ul className="mt-14 divide-y divide-line border-y border-line">

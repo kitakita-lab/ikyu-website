@@ -29,6 +29,7 @@ export const nav = [
   { href: "/about", label: "ABOUT", ja: "ikyuとつくり手のこと" },
   { href: "/collection", label: "COLLECTION", ja: "作品のこと" },
   { href: "/news", label: "NEWS", ja: "お知らせ・出店情報" },
+  { href: "/events", label: "EVENT", ja: "イベントのこと" },
   { href: "/care", label: "CARE", ja: "お手入れとお直しのこと" },
   { href: "/contact", label: "CONTACT", ja: "お問い合わせ" },
 ] as const;
