@@ -29,7 +29,7 @@ export default function HomePage() {
         <Container>
           <h1 className="sr-only">暮らしに花が咲きますように。</h1>
           <Image
-            src="/images/hero-sheet-wide.webp"
+            src="/images/hero-sheet-wide-v2.webp"
             alt="ikyuのブランドシート。「暮らしに花が咲きますように。Each piece, one of a kind.」の言葉と、木のスツールのバングル・手首で揺れるバングル・かすみ草のカードの3枚の写真"
             width={2000}
             height={1666}
@@ -38,7 +38,7 @@ export default function HomePage() {
             className="hidden h-auto w-full md:block"
           />
           <Image
-            src="/images/hero-sheet-tall.webp"
+            src="/images/hero-sheet-tall-v2.webp"
             alt="ikyuのブランドシート。「Each piece, one of a kind. ひとつひとつが、一点もの。」の言葉と、バングルやかすみ草のイヤリングの3枚の写真"
             width={1500}
             height={2102}
