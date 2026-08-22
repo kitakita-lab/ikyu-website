@@ -28,8 +28,10 @@ export default function EventsPage() {
           <Heading as="h1" className="mt-4">
             イベントのこと
           </Heading>
+          {/* アクセサリーとワークショップを、ABOUTと同じ「花を選ぶ」の思想でつなぐ */}
           <p className="mt-6 text-[14px] leading-[2.3] text-ink-soft md:text-[15px]">
-            ワークショップや展示で、花にふれる時間をお届けしています。
+            ikyuの制作は、花を選ぶところから始まります。
+            その始まりの時間をお客様にひらいたワークショップと、
             これまでのイベントの記録です。
           </p>
         </Container>
