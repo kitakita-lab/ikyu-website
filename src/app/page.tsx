@@ -20,63 +20,34 @@ export default function HomePage() {
   return (
     <>
       {/*
-       * ヒーロー:ブランドシート(v9)の3枚組コラージュをサイト上で再現する。
-       * PDFの1枚絵をそのまま貼るとロゴとコピーが二重表示になるため、
-       * 同じ3枚(木のスツールのバングル/着用/かすみ草のカード)を
-       * 高解像度のオリジナルから並べる。列幅を各写真の縦横比に比例させ、
-       * 3枚の高さが揃うようにしている(コラージュと同じ等高の帯になる)
+       * ヒーロー:オーナー制作のブランドシート(v9)をそのまま最上部に掲げる。
+       * ロゴ・コピー・3枚の写真はシート内に焼き込まれているため、
+       * h1は検索エンジンとスクリーンリーダー向けに不可視で置く。
+       * PC=横長版 / スマホ=縦長版 を出し分ける(どちらも無加工)
        */}
       <Section space="compact">
         <Container>
-          <p className="font-display text-[12px] uppercase tracking-[0.3em] text-rose">
-            Handmade in Sapporo
-          </p>
-          <h1 className="mt-6 text-[26px] font-normal leading-[1.7] tracking-[0.08em] md:text-[36px]">
-            暮らしに花が
-            <br className="md:hidden" />
-            咲きますように。
-          </h1>
-          <p className="mt-6 max-w-[560px] text-[14px] leading-[2.3] text-ink-soft md:text-[15px]">
-            ikyuは、北海道札幌でうまれる
-            ハンドメイドアクセサリーのブランドです。
-            身につけるたび、気持ちがすこし明るくなる。
-            そんな「花」をお届けしています。
-          </p>
+          <h1 className="sr-only">暮らしに花が咲きますように。</h1>
+          <Image
+            src="/images/hero-sheet-wide.webp"
+            alt="ikyuのブランドシート。「暮らしに花が咲きますように。Each piece, one of a kind.」の言葉と、木のスツールのバングル・手首で揺れるバングル・かすみ草のカードの3枚の写真"
+            width={2000}
+            height={1666}
+            priority
+            sizes="(min-width: 768px) 1000px, 100vw"
+            className="hidden h-auto w-full md:block"
+          />
+          <Image
+            src="/images/hero-sheet-tall.webp"
+            alt="ikyuのブランドシート。「Each piece, one of a kind. ひとつひとつが、一点もの。」の言葉と、バングルやかすみ草のイヤリングの3枚の写真"
+            width={1500}
+            height={2102}
+            priority
+            sizes="100vw"
+            className="h-auto w-full md:hidden"
+          />
           <div className="mt-8">
             <ArrowLink href="/collection">作品を見る</ArrowLink>
-          </div>
-
-          <div className="mt-12 grid grid-cols-[0.8fr_0.714fr_0.563fr] gap-4 md:mt-16 md:gap-8">
-            <div className="relative aspect-[4/5] w-full">
-              <Image
-                src="/images/product-bangles-wood.webp"
-                alt="白い布の上の木のスツールに、ドライフラワーをとじこめたゴールドとシルバーのフラワーバングルが2本重なる"
-                fill
-                priority
-                sizes="38vw"
-                className="object-cover"
-              />
-            </div>
-            <div className="relative aspect-[1148/1607] w-full">
-              <Image
-                src="/images/product-bangle-wear.webp"
-                alt="白い袖もとの手首で揺れる、花をとじこめたゴールドのフラワーバングル"
-                fill
-                priority
-                sizes="34vw"
-                className="object-cover"
-              />
-            </div>
-            <div className="relative aspect-[9/16] w-full">
-              <Image
-                src="/images/hero-studs.webp"
-                alt="白い陶器のトレイの上、かすみ草の小花のイヤリングを留めたikyuのブランドカードが2枚"
-                fill
-                priority
-                sizes="27vw"
-                className="object-cover"
-              />
-            </div>
           </div>
         </Container>
       </Section>
