@@ -20,31 +20,22 @@ export default function HomePage() {
   return (
     <>
       {/*
-       * ヒーロー:オーナー制作のブランドシート(v9)をそのまま最上部に掲げる。
-       * ロゴ・コピー・3枚の写真はシート内に焼き込まれているため、
-       * h1は検索エンジンとスクリーンリーダー向けに不可視で置く。
-       * PC=横長版 / スマホ=縦長版 を出し分ける(どちらも無加工)
+       * ヒーロー:オーナー制作のブランドシート(v9・横長版)を全デバイス共通で掲げる。
+       * 3枚の写真が横一列に並ぶレイアウトはシートのまま(ロゴのみ消去済み)。
+       * コピーはシートに焼き込まれているため、h1は検索エンジンと
+       * スクリーンリーダー向けに不可視で置く
        */}
       <Section space="compact">
         <Container>
           <h1 className="sr-only">暮らしに花が咲きますように。</h1>
           <Image
             src="/images/hero-sheet-wide-v2.webp"
-            alt="ikyuのブランドシート。「暮らしに花が咲きますように。Each piece, one of a kind.」の言葉と、木のスツールのバングル・手首で揺れるバングル・かすみ草のカードの3枚の写真"
+            alt="ikyuのブランドシート。「暮らしに花が咲きますように。Each piece, one of a kind.」の言葉と、木のスツールのバングル・手首で揺れるバングル・かすみ草のカードの3枚の写真が横に並ぶ"
             width={2000}
             height={1666}
             priority
             sizes="(min-width: 768px) 1000px, 100vw"
-            className="hidden h-auto w-full md:block"
-          />
-          <Image
-            src="/images/hero-sheet-tall-v2.webp"
-            alt="ikyuのブランドシート。「Each piece, one of a kind. ひとつひとつが、一点もの。」の言葉と、バングルやかすみ草のイヤリングの3枚の写真"
-            width={1500}
-            height={2102}
-            priority
-            sizes="100vw"
-            className="h-auto w-full md:hidden"
+            className="h-auto w-full"
           />
           <div className="mt-8">
             <ArrowLink href="/collection">作品を見る</ArrowLink>
