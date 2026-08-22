@@ -14,31 +14,59 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
+/**
+ * ファーストビューの写真。より強い一枚(例:耳元×アクセサリー×自然光)が
+ * 撮影できたら、このオブジェクトを差し替えるだけでHOMEが更新されます。
+ * 写真は必ず全身が写る実写を使うこと(トリミングで作品を切らない)。
+ */
+const heroImage = {
+  src: "/images/product-stand.webp",
+  alt: "白い布を背景に、アクリルスタンドで揺れるikyuのピアス。金の花びらから、白い小花と細いゴールドのラインが垂れる",
+  width: 2841,
+  height: 2670,
+};
+
 export default function HomePage() {
   const latestNews = news.slice(0, 3);
 
   return (
     <>
       {/*
-       * ヒーロー:オーナー制作のブランドシート(v9・横長版)を全デバイス共通で掲げる。
-       * 3枚の写真が横一列に並ぶレイアウトはシートのまま(ロゴのみ消去済み)。
-       * コピーはシートに焼き込まれているため、h1は検索エンジンと
-       * スクリーンリーダー向けに不可視で置く
+       * ヒーロー(A案「言葉と、光る一枚」/ 説明しすぎない構成):
+       * コピー・作品写真1枚・COLLECTIONへの導線、の3要素だけに絞る。
+       * ブランドの説明は次のConceptセクションが担う。
+       * 写真の差し替えはファイル冒頭の heroImage だけで完結する
        */}
       <Section space="compact">
         <Container>
-          <h1 className="sr-only">暮らしに花が咲きますように。</h1>
-          <Image
-            src="/images/hero-sheet-wide-v2.webp"
-            alt="ikyuのブランドシート。「暮らしに花が咲きますように。Each piece, one of a kind.」の言葉と、木のスツールのバングル・手首で揺れるバングル・かすみ草のカードの3枚の写真が横に並ぶ"
-            width={2000}
-            height={1666}
-            priority
-            sizes="(min-width: 768px) 1000px, 100vw"
-            className="h-auto w-full"
-          />
-          <div className="mt-8">
-            <ArrowLink href="/collection">作品を見る</ArrowLink>
+          <div className="grid items-center gap-10 md:grid-cols-[9fr_11fr] md:gap-16">
+            <div>
+              <h1 className="text-[26px] font-normal leading-[1.8] tracking-[0.08em] md:text-[36px]">
+                暮らしに花が
+                <br />
+                咲きますように。
+              </h1>
+              <div className="mt-8 hidden md:block">
+                <ArrowLink href="/collection">作品を見る</ArrowLink>
+              </div>
+            </div>
+            <div
+              className="relative w-full"
+              style={{ aspectRatio: `${heroImage.width} / ${heroImage.height}` }}
+            >
+              <Image
+                src={heroImage.src}
+                alt={heroImage.alt}
+                fill
+                priority
+                sizes="(min-width: 768px) 55vw, 100vw"
+                className="object-cover"
+              />
+            </div>
+            {/* スマホは コピー → 写真 → 導線 の縦のリズム */}
+            <div className="md:hidden">
+              <ArrowLink href="/collection">作品を見る</ArrowLink>
+            </div>
           </div>
         </Container>
       </Section>
@@ -76,19 +104,20 @@ export default function HomePage() {
             {/* 写真自体も /collection へのリンクにする(押せる場所を増やす) */}
             <Link
               href="/collection"
-              className="relative order-2 block aspect-[2841/2670] w-full md:order-1"
+              className="relative order-2 block aspect-[4/5] w-full md:order-1"
               aria-label="COLLECTION 作品のことを見る"
             >
               <Image
-                src="/images/product-stand.webp"
-                alt="白い布を背景に、アクリルスタンドで揺れるikyuのピアス。金の花びらから、白い小花と細いゴールドのラインが垂れる"
+                src="/images/product-hoops.webp"
+                alt="白いサテンの上に並ぶ、金の花びらのフープピアス2組。花芯にはドライフラワーをとじこめた透明な球と、透明ビーズの飾りが揺れる"
                 fill
                 sizes="(min-width: 768px) 50vw, 100vw"
                 className="object-cover"
               />
             </Link>
             <div className="order-1 md:order-2">
-              <Eyebrow>Collection</Eyebrow>
+              {/* 「一点もの」の英語コピーは作品一覧の文脈でこそ効くため、FVからここへ移設 */}
+              <Eyebrow>Each piece, one of a kind.</Eyebrow>
               <Heading as="h2" id="collection-heading" className="mt-4">
                 その日の気持ちに、
                 <br />
