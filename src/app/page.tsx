@@ -20,41 +20,60 @@ export default function HomePage() {
   return (
     <>
       {/*
-       * ヒーロー:言葉と「金の花」(ブランドを代表する作品)を最初の一画面に並べる。
-       * 写真はすべて実際の作品写真(AI生成画像は使わない)。
-       * 構図は撮影されたままの2組(4輪)を尊重し、作品を絶対に途中で切らない。
-       * 4:5の全身が1366x768のノートPCでも初画面に収まるよう、50:50で組む
+       * ヒーロー:ブランドシート(v9)の3枚組コラージュをサイト上で再現する。
+       * PDFの1枚絵をそのまま貼るとロゴとコピーが二重表示になるため、
+       * 同じ3枚(木のスツールのバングル/着用/かすみ草のカード)を
+       * 高解像度のオリジナルから並べる。列幅を各写真の縦横比に比例させ、
+       * 3枚の高さが揃うようにしている(コラージュと同じ等高の帯になる)
        */}
       <Section space="compact">
         <Container>
-          <div className="grid items-center gap-10 md:grid-cols-2 md:gap-16">
-            <div>
-              <p className="font-display text-[12px] uppercase tracking-[0.3em] text-rose">
-                Handmade in Sapporo
-              </p>
-              {/* 2行で組む前提の見出し(1行に詰めると列幅で中途半端に折れる) */}
-              <h1 className="mt-6 text-[26px] font-normal leading-[1.7] tracking-[0.08em] md:text-[36px]">
-                暮らしに花が
-                <br />
-                咲きますように。
-              </h1>
-              <p className="mt-6 max-w-[560px] text-[14px] leading-[2.3] text-ink-soft md:text-[15px]">
-                ikyuは、北海道札幌でうまれる
-                ハンドメイドアクセサリーのブランドです。
-                身につけるたび、気持ちがすこし明るくなる。
-                そんな「花」をお届けしています。
-              </p>
-              <div className="mt-9">
-                <ArrowLink href="/collection">作品を見る</ArrowLink>
-              </div>
-            </div>
+          <p className="font-display text-[12px] uppercase tracking-[0.3em] text-rose">
+            Handmade in Sapporo
+          </p>
+          <h1 className="mt-6 text-[26px] font-normal leading-[1.7] tracking-[0.08em] md:text-[36px]">
+            暮らしに花が
+            <br className="md:hidden" />
+            咲きますように。
+          </h1>
+          <p className="mt-6 max-w-[560px] text-[14px] leading-[2.3] text-ink-soft md:text-[15px]">
+            ikyuは、北海道札幌でうまれる
+            ハンドメイドアクセサリーのブランドです。
+            身につけるたび、気持ちがすこし明るくなる。
+            そんな「花」をお届けしています。
+          </p>
+          <div className="mt-8">
+            <ArrowLink href="/collection">作品を見る</ArrowLink>
+          </div>
+
+          <div className="mt-12 grid grid-cols-[0.8fr_0.714fr_0.563fr] gap-4 md:mt-16 md:gap-8">
             <div className="relative aspect-[4/5] w-full">
               <Image
-                src="/images/hero-soap.webp"
-                alt="窓光の筋が差すなか、波形のアクリルスタンドで揺れるsoap bubble。しゃぼん玉のような虹色の透明ビーズが光をまとう"
+                src="/images/product-bangles-wood.webp"
+                alt="白い布の上の木のスツールに、ドライフラワーをとじこめたゴールドとシルバーのフラワーバングルが2本重なる"
                 fill
                 priority
-                sizes="(min-width: 768px) 50vw, 100vw"
+                sizes="38vw"
+                className="object-cover"
+              />
+            </div>
+            <div className="relative aspect-[1148/1607] w-full">
+              <Image
+                src="/images/product-bangle-wear.webp"
+                alt="白い袖もとの手首で揺れる、花をとじこめたゴールドのフラワーバングル"
+                fill
+                priority
+                sizes="34vw"
+                className="object-cover"
+              />
+            </div>
+            <div className="relative aspect-[9/16] w-full">
+              <Image
+                src="/images/hero-studs.webp"
+                alt="白い陶器のトレイの上、かすみ草の小花のイヤリングを留めたikyuのブランドカードが2枚"
+                fill
+                priority
+                sizes="27vw"
                 className="object-cover"
               />
             </div>
