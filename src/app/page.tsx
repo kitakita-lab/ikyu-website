@@ -27,56 +27,49 @@ const heroImage = {
   height: 1316,
 };
 
+/*
+ * トップページ = 「小さなアクセサリーブランドの、静かな写真編集」。
+ * 各セクションは同じ型を繰り返さず、写真の大きさ・置き方(端まで/余白の中)・
+ * 背景の面を意図して変える。強:ヒーロー(右端まで)/作品(左端まで)
+ * 弱:つくり手(余白の中の一枚)/ CARE・NEWS(文字だけの間)
+ */
 export default function HomePage() {
   const latestNews = news.slice(0, 3);
 
   return (
     <>
-      {/*
-       * ヒーロー(A案「言葉と、光る一枚」/ 説明しすぎない構成):
-       * コピー・作品写真1枚・COLLECTIONへの導線、の3要素だけに絞る。
-       * ブランドの説明は次のConceptセクションが担う。
-       * 写真の差し替えはファイル冒頭の heroImage だけで完結する
-       */}
+      {/* ───────── ヒーロー:言葉と作品をひとつの面に ───────── */}
       <section className="hero relative overflow-hidden">
-        {/*
-         * PC:写真を画面の右端まで伸ばし、左端だけを紙(ページ背景)へ溶かす。
-         * 「四角い写真を置いた」のではなく、言葉と作品がひとつの面に載る構図にする。
-         * 幅は上限を設け、大画面でも作品を切らない(object-position で作品中心を保持)
-         */}
-        <div className="hero__photo absolute inset-y-0 right-0 z-0 hidden w-[min(52vw,820px)] md:block">
+        <div className="hero__photo absolute inset-y-0 right-0 z-0 hidden w-[min(54vw,860px)] md:block">
           <Image
             src={heroImage.src}
             alt={heroImage.alt}
             fill
             priority
-            sizes="(min-width: 768px) 52vw, 100vw"
+            sizes="(min-width: 768px) 54vw, 100vw"
             className="object-cover object-[58%_50%]"
           />
         </div>
 
-        {/* 花びら:写真より前、文字より後ろ。PCでは写真のない左側を中心に漂う */}
         <Petals />
 
         <Container className="relative z-20">
-          <div className="pt-16 md:flex md:min-h-[min(78vh,760px)] md:items-center md:pt-0">
-            <div className="md:w-[42%]">
-              <h1 className="text-[26px] font-normal leading-[1.8] tracking-[0.08em] md:text-[36px]">
+          <div className="pt-12 md:flex md:min-h-[min(78vh,760px)] md:items-center md:pt-0">
+            {/* 見出しは写真の溶ける縁に寄せて、ひとつの構図にする */}
+            <div className="md:w-[46%] md:pl-[10%]">
+              <h1 className="text-[27px] font-normal leading-[1.75] tracking-[0.08em] md:text-[36px]">
                 暮らしに花が
                 <br />
                 咲きますように。
               </h1>
-              <div className="mt-8 hidden md:block">
+              <div className="mt-7 hidden md:block">
                 <ArrowLink href="/collection">作品を見る</ArrowLink>
               </div>
             </div>
           </div>
 
-          {/*
-           * スマホ:写真を画面の両端まで広げ、上下の縁を紙へ溶かす。
-           * 枠のない「面」として置くことで、コピー→写真→導線が一つの流れになる
-           */}
-          <div className="hero__photo-sp -mx-6 mt-10 md:hidden">
+          {/* スマホ:写真は画面の両端まで、縁はぼかさずそのまま置く */}
+          <div className="-mx-6 mt-7 md:hidden">
             <Image
               src={heroImage.src}
               alt={heroImage.alt}
@@ -87,22 +80,22 @@ export default function HomePage() {
               className="h-auto w-full"
             />
           </div>
-          <div className="mt-6 pb-16 md:hidden">
+          <div className="mt-5 pb-14 md:hidden">
             <ArrowLink href="/collection">作品を見る</ArrowLink>
           </div>
         </Container>
       </section>
 
-      {/* ブランド導入:「花」の再定義 */}
-      <Section aria-labelledby="concept-heading">
+      {/* ───────── CONCEPT:言葉だけの間 ───────── */}
+      <section aria-labelledby="concept-heading" className="py-16 md:py-24">
         <Container width="narrow">
-          <Eyebrow id="concept-eyebrow">Concept</Eyebrow>
+          <Eyebrow>Concept</Eyebrow>
           <Heading as="h2" id="concept-heading" className="mt-4">
             ここでいう「花」は、
             <br />
             植物のことではありません。
           </Heading>
-          <div className="mt-8 space-y-6 text-[15px] leading-[2.4]">
+          <div className="mt-7 space-y-5 text-[15px] leading-[2.3]">
             <p>
               お気に入りのピアスをつけた朝、鏡の前で背筋が伸びる。
               いつもの装いに、ひとつぶの光が加わる。
@@ -113,105 +106,135 @@ export default function HomePage() {
               あなたの毎日に、花が咲きますように。
             </p>
           </div>
-          <div className="mt-10">
+          <div className="mt-8">
             <ArrowLink href="/about">ikyuとつくり手のこと</ArrowLink>
           </div>
         </Container>
-      </Section>
+      </section>
 
-      {/* COLLECTION:作品の華やぎを見せる */}
-      <Section tone="soft" aria-labelledby="collection-heading">
-        <Container>
-          <div className="grid items-center gap-12 md:grid-cols-2 md:gap-16">
-            {/* 写真自体も /collection へのリンクにする(押せる場所を増やす) */}
-            <Link
-              href="/collection"
-              className="relative order-2 block aspect-[4/5] w-full md:order-1"
-              aria-label="COLLECTION 作品のことを見る"
-            >
+      {/* ───────── 作品:大きな一枚と、添える一枚 ───────── */}
+      <section aria-labelledby="collection-heading" className="relative overflow-hidden">
+        {/* PC:金の花を左端まで伸ばす。右端だけを紙へ溶かす */}
+        <div className="bleed-left__photo absolute inset-y-0 left-0 z-0 hidden w-[min(50vw,760px)] md:block">
+          <Image
+            src="/images/product-hoops.webp"
+            alt="白いサテンの上に並ぶ、金の花びらのフープピアス2組。花芯にはドライフラワーをとじこめた透明な球と、透明ビーズの飾りが揺れる"
+            fill
+            sizes="(min-width: 768px) 50vw, 100vw"
+            className="object-cover object-center"
+          />
+        </div>
+
+        <Container className="relative z-10">
+          {/* スマホ:大きな一枚は画面の両端まで */}
+          <Link
+            href="/collection"
+            aria-label="COLLECTION 作品のことを見る"
+            className="-mx-6 block md:hidden"
+          >
+            <Image
+              src="/images/product-hoops.webp"
+              alt="白いサテンの上に並ぶ、金の花びらのフープピアス2組。花芯にはドライフラワーをとじこめた透明な球と、透明ビーズの飾りが揺れる"
+              width={1200}
+              height={1500}
+              loading="eager"
+              sizes="100vw"
+              className="h-auto w-full"
+            />
+          </Link>
+
+          <div className="py-12 md:ml-[54%] md:flex md:min-h-[min(88vh,820px)] md:flex-col md:justify-center md:py-20">
+            {/* 添える一枚:小さく、右へ寄せて */}
+            <div className="mb-8 hidden md:block md:w-[46%]">
               <Image
-                src="/images/product-hoops.webp"
-                alt="白いサテンの上に並ぶ、金の花びらのフープピアス2組。花芯にはドライフラワーをとじこめた透明な球と、透明ビーズの飾りが揺れる"
-                fill
-                sizes="(min-width: 768px) 50vw, 100vw"
-                className="object-cover"
+                src="/images/product-soap-bubble.webp"
+                alt="波形のアクリルスタンドに揺れるsoap bubble。しゃぼん玉のような虹色の透明ビーズに、窓の光と影が差す"
+                width={1200}
+                height={1500}
+                sizes="(min-width: 768px) 22vw, 60vw"
+                className="h-auto w-full"
               />
-            </Link>
-            <div className="order-1 md:order-2">
-              {/* 「一点もの」の英語コピーは作品一覧の文脈でこそ効くため、FVからここへ移設 */}
-              <Eyebrow>Each piece, one of a kind.</Eyebrow>
-              <Heading as="h2" id="collection-heading" className="mt-4">
-                その日の気持ちに、
-                <br />
-                そっと華やぎを。
-              </Heading>
-              <p className="mt-6 text-[14px] leading-[2.3] text-ink-soft md:text-[15px]">
-                光をすくいあげる透明、肌になじむ金、とじこめた季節の花。
-                ふとした瞬間に、心をほどく作品たちです。
-              </p>
-              <div className="mt-9">
-                <LinkButton href="/collection">作品を見る</LinkButton>
-              </div>
+            </div>
+            <Eyebrow>Each piece, one of a kind.</Eyebrow>
+            <Heading as="h2" id="collection-heading" className="mt-4">
+              その日の気持ちに、
+              <br />
+              そっと華やぎを。
+            </Heading>
+            <p className="mt-5 text-[14px] leading-[2.3] text-ink-soft md:text-[15px]">
+              光をすくいあげる透明、肌になじむ金、とじこめた季節の花。
+              ふとした瞬間に、心をほどく作品たちです。
+            </p>
+            <div className="mt-8">
+              <LinkButton href="/collection">作品を見る</LinkButton>
+            </div>
+            {/* スマホ:添える一枚は右へ寄せて小さく */}
+            <div className="mt-12 ml-auto w-[62%] md:hidden">
+              <Image
+                src="/images/product-soap-bubble.webp"
+                alt="波形のアクリルスタンドに揺れるsoap bubble。しゃぼん玉のような虹色の透明ビーズに、窓の光と影が差す"
+                width={1200}
+                height={1500}
+                sizes="62vw"
+                className="h-auto w-full"
+              />
             </div>
           </div>
         </Container>
-      </Section>
+      </section>
 
-      {/* つくり手:ブランドを「人」として好きになってもらう */}
-      <Section aria-labelledby="maker-heading">
+      {/* ───────── つくり手:余白の中の一枚と、言葉を段違いに ───────── */}
+      <Section tone="soft" aria-labelledby="maker-heading">
         <Container>
-          <div className="grid items-center gap-12 md:grid-cols-2 md:gap-16">
-            <div>
+          <div className="md:grid md:grid-cols-12 md:gap-x-10">
+            <div className="md:col-span-6">
+              <Image
+                src="/images/top-gift.webp"
+                alt="金の花のピアスを留めたブランドカードを、お客様へ手渡すように掲げた作り手の手元"
+                width={1400}
+                height={1050}
+                sizes="(min-width: 768px) 50vw, 100vw"
+                className="h-auto w-full"
+              />
+            </div>
+            <div className="mt-8 md:col-span-5 md:col-start-8 md:mt-0 md:self-end md:pb-6">
               <Eyebrow>About</Eyebrow>
               <Heading as="h2" id="maker-heading" className="mt-4">
                 作り手の手から、
                 <br />
                 あなたの手へ。
               </Heading>
-              <p className="mt-6 text-[14px] leading-[2.3] text-ink-soft md:text-[15px]">
+              <p className="mt-5 text-[14px] leading-[2.3] text-ink-soft md:text-[15px]">
                 花屋さんで選んだ生花を、ドライフラワーに育て、
                 ひとつずつ手しごとで仕上げる。
                 イベント会場では、つくり手と直接お会いいただける日もあります。
               </p>
-              <div className="mt-9">
+              <div className="mt-7">
                 <ArrowLink href="/about">つくり手に会いにいく</ArrowLink>
               </div>
-            </div>
-            <div className="relative aspect-[4/3] w-full">
-              <Image
-                src="/images/top-gift.webp"
-                alt="金の花のピアスを留めたブランドカードを、お客様へ手渡すように掲げた作り手の手元"
-                fill
-                sizes="(min-width: 768px) 50vw, 100vw"
-                className="object-cover"
-              />
             </div>
           </div>
         </Container>
       </Section>
 
-      {/*
-       * CARE:長く愛されるブランドであることの宣言。
-       * ここだけ英字ラベルを外し、大きな一行だけを置く「見せ場」にする
-       * (同型セクションの反復を断ち、お直しの相談窓口=ikyuの差別化を最も静かな形で立てる)
-       */}
-      <Section tone="soft" aria-labelledby="care-heading">
+      {/* ───────── CARE:文字だけの、短い間 ───────── */}
+      <section aria-labelledby="care-heading" className="py-16 md:py-24">
         <Container width="narrow" className="text-center">
           <Heading as="h2" id="care-heading" display>
             永く、そばに。
           </Heading>
-          <p className="mt-7 text-[14px] leading-[2.2] text-ink-soft md:text-[15px]">
+          <p className="mt-6 text-[14px] leading-[2.2] text-ink-soft md:text-[15px]">
             ikyuの作品は、お手入れやお直しのご相談をいつでも承っています。
             お迎えいただいた日から、おつきあいが始まります。
           </p>
-          <div className="mt-9">
+          <div className="mt-7">
             <ArrowLink href="/care">お手入れとお直しのこと</ArrowLink>
           </div>
         </Container>
-      </Section>
+      </section>
 
-      {/* NEWS */}
-      <Section aria-labelledby="news-heading">
+      {/* ───────── NEWS ───────── */}
+      <section aria-labelledby="news-heading" className="border-t border-line py-14 md:py-20">
         <Container width="narrow">
           <div className="flex items-baseline justify-between">
             <div>
@@ -231,12 +254,12 @@ export default function HomePage() {
               {upcomingEvent.name}({upcomingEvent.dateText})
             </p>
           )}
-          <ul className="mt-10 divide-y divide-line border-y border-line">
+          <ul className="mt-8 divide-y divide-line border-y border-line">
             {latestNews.map((post) => (
               <li key={post.slug}>
                 <Link
                   href={`/news/${post.slug}`}
-                  className="group flex flex-col gap-1 py-6 sm:flex-row sm:items-baseline sm:gap-8"
+                  className="group flex flex-col gap-1 py-5 sm:flex-row sm:items-baseline sm:gap-8"
                 >
                   <time
                     dateTime={post.date}
@@ -255,14 +278,10 @@ export default function HomePage() {
             ))}
           </ul>
         </Container>
-      </Section>
+      </section>
 
-      {/*
-       * Instagram:いちばん近い場所への誘導。
-       * 直前のCARE(中央揃えの見せ場)と形を変え、左揃えで静かに結ぶ。
-       * アンダースコア入りのIDはボタンから外し、添え書きに退げる
-       */}
-      <Section tone="soft" space="compact" aria-labelledby="instagram-heading">
+      {/* ───────── Instagram:いちばん近い場所へ ───────── */}
+      <section aria-labelledby="instagram-heading" className="border-t border-line py-14 md:py-20">
         <Container width="narrow">
           <Eyebrow>Instagram</Eyebrow>
           <Heading as="h2" id="instagram-heading" className="mt-4">
@@ -274,7 +293,7 @@ export default function HomePage() {
             作品のこと、出店のこと、制作の途中のこと。
             いちばん近くでikyuを感じていただける場所です。
           </p>
-          <div className="mt-8 flex flex-wrap items-baseline gap-x-6 gap-y-3">
+          <div className="mt-7 flex flex-wrap items-baseline gap-x-6 gap-y-3">
             <LinkButton href={site.instagram.url} external>
               Instagramでフォローする
             </LinkButton>
@@ -283,7 +302,7 @@ export default function HomePage() {
             </p>
           </div>
         </Container>
-      </Section>
+      </section>
     </>
   );
 }
