@@ -6,6 +6,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Heading } from "@/components/ui/Heading";
 import { ArrowLink } from "@/components/ui/ArrowLink";
 import { LinkButton } from "@/components/ui/LinkButton";
+import { Petals } from "@/components/features/Petals";
 import { news, upcomingEvent, formatDate } from "@/content/news";
 import { site } from "@/content/site";
 import Link from "next/link";
@@ -37,8 +38,10 @@ export default function HomePage() {
        * ブランドの説明は次のConceptセクションが担う。
        * 写真の差し替えはファイル冒頭の heroImage だけで完結する
        */}
-      <Section space="compact">
-        <Container>
+      <Section space="compact" className="relative overflow-hidden">
+        {/* 花びらの演出(装飾・操作を妨げない・停止ボタン付き) */}
+        <Petals />
+        <Container className="relative z-10">
           <div className="grid items-center gap-10 md:grid-cols-[9fr_11fr] md:gap-16">
             <div>
               <h1 className="text-[26px] font-normal leading-[1.8] tracking-[0.08em] md:text-[36px]">
