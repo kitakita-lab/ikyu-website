@@ -23,8 +23,8 @@ export const metadata: Metadata = {
 const heroImage = {
   src: "/images/product-stand.webp",
   alt: "白い布を背景に、アクリルスタンドで揺れるikyuのピアス。金の花びらから、白い小花と細いゴールドのラインが垂れる",
-  width: 2841,
-  height: 2670,
+  width: 1400,
+  height: 1316,
 };
 
 export default function HomePage() {
@@ -38,12 +38,29 @@ export default function HomePage() {
        * ブランドの説明は次のConceptセクションが担う。
        * 写真の差し替えはファイル冒頭の heroImage だけで完結する
        */}
-      <Section space="compact" className="relative overflow-hidden">
-        {/* 花びらの演出(装飾・操作を妨げない・停止ボタン付き) */}
+      <section className="hero relative overflow-hidden">
+        {/*
+         * PC:写真を画面の右端まで伸ばし、左端だけを紙(ページ背景)へ溶かす。
+         * 「四角い写真を置いた」のではなく、言葉と作品がひとつの面に載る構図にする。
+         * 幅は上限を設け、大画面でも作品を切らない(object-position で作品中心を保持)
+         */}
+        <div className="hero__photo absolute inset-y-0 right-0 z-0 hidden w-[min(52vw,820px)] md:block">
+          <Image
+            src={heroImage.src}
+            alt={heroImage.alt}
+            fill
+            priority
+            sizes="(min-width: 768px) 52vw, 100vw"
+            className="object-cover object-[58%_50%]"
+          />
+        </div>
+
+        {/* 花びら:写真より前、文字より後ろ。PCでは写真のない左側を中心に漂う */}
         <Petals />
-        <Container className="relative z-10">
-          <div className="grid items-center gap-10 md:grid-cols-[9fr_11fr] md:gap-16">
-            <div>
+
+        <Container className="relative z-20">
+          <div className="pt-16 md:flex md:min-h-[min(78vh,760px)] md:items-center md:pt-0">
+            <div className="md:w-[42%]">
               <h1 className="text-[26px] font-normal leading-[1.8] tracking-[0.08em] md:text-[36px]">
                 暮らしに花が
                 <br />
@@ -53,26 +70,28 @@ export default function HomePage() {
                 <ArrowLink href="/collection">作品を見る</ArrowLink>
               </div>
             </div>
-            <div
-              className="relative w-full"
-              style={{ aspectRatio: `${heroImage.width} / ${heroImage.height}` }}
-            >
-              <Image
-                src={heroImage.src}
-                alt={heroImage.alt}
-                fill
-                priority
-                sizes="(min-width: 768px) 55vw, 100vw"
-                className="object-cover"
-              />
-            </div>
-            {/* スマホは コピー → 写真 → 導線 の縦のリズム */}
-            <div className="md:hidden">
-              <ArrowLink href="/collection">作品を見る</ArrowLink>
-            </div>
+          </div>
+
+          {/*
+           * スマホ:写真を画面の両端まで広げ、上下の縁を紙へ溶かす。
+           * 枠のない「面」として置くことで、コピー→写真→導線が一つの流れになる
+           */}
+          <div className="hero__photo-sp -mx-6 mt-10 md:hidden">
+            <Image
+              src={heroImage.src}
+              alt={heroImage.alt}
+              width={heroImage.width}
+              height={heroImage.height}
+              priority
+              sizes="100vw"
+              className="h-auto w-full"
+            />
+          </div>
+          <div className="mt-6 pb-16 md:hidden">
+            <ArrowLink href="/collection">作品を見る</ArrowLink>
           </div>
         </Container>
-      </Section>
+      </section>
 
       {/* ブランド導入:「花」の再定義 */}
       <Section aria-labelledby="concept-heading">

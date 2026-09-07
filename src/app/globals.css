@@ -41,6 +41,41 @@ body {
 }
 
 /*
+  ヒーローの写真と紙(ページ背景)の境界を溶かす
+  - 写真そのものは白くぼかさず、縁だけを局所的に透過させる
+  - 角丸・枠線・影は使わない
+*/
+.hero__photo {
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 26%);
+  mask-image: linear-gradient(to right, transparent 0%, #000 26%);
+}
+/* 下端の直線も紙へ溶かす(作品のある中央部には触れない) */
+.hero__photo::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 16%;
+  background: linear-gradient(to bottom, transparent, var(--color-base));
+  pointer-events: none;
+}
+.hero__photo-sp {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #000 14%,
+    #000 88%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #000 14%,
+    #000 88%,
+    transparent 100%
+  );
+}
+
+/*
   花びらの演出(ファーストビュー)
   - transform / opacity のみを動かし、レイアウトに影響させない
   - 数値の調整は src/components/features/Petals.tsx の PETAL_CONFIG で行う

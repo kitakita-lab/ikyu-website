@@ -15,6 +15,8 @@ import { useEffect, useRef, useState } from "react";
 export const PETAL_CONFIG = {
   /** 同時に存在する花びらの枚数 */
   count: { desktop: 4, mobile: 3 },
+  /** 出現する横位置の範囲(%)。PCは写真のない左側の余白を中心に */
+  spawnX: { desktop: [4, 46], mobile: [4, 96] },
   /** 1枚が現れてから消えるまでの秒数(この範囲でランダム) */
   travelSec: { min: 9, max: 15 },
   /** 消えてから次に現れるまでの「間」の秒数 */
@@ -53,10 +55,10 @@ type Petal = {
 const rand = (min: number, max: number) => min + Math.random() * (max - min);
 const pick = <T,>(arr: readonly T[]) => arr[Math.floor(Math.random() * arr.length)];
 
-function makePetals(count: number): Petal[] {
+function makePetals(count: number, spawnX: readonly [number, number]): Petal[] {
   return Array.from({ length: count }, (_, i) => ({
     id: i,
-    left: rand(4, 96),
+    left: rand(spawnX[0], spawnX[1]),
     delay: rand(0, 8),
     travel: rand(PETAL_CONFIG.travelSec.min, PETAL_CONFIG.travelSec.max),
     rest: rand(PETAL_CONFIG.restSec.min, PETAL_CONFIG.restSec.max),
@@ -84,7 +86,11 @@ export function Petals() {
     const desktop = window.matchMedia("(min-width: 768px)").matches;
     // 描画後の次フレームで生成(初回描画を妨げない)
     const id = requestAnimationFrame(() =>
-      setPetals(makePetals(desktop ? PETAL_CONFIG.count.desktop : PETAL_CONFIG.count.mobile)),
+      setPetals(
+        desktop
+          ? makePetals(PETAL_CONFIG.count.desktop, PETAL_CONFIG.spawnX.desktop)
+          : makePetals(PETAL_CONFIG.count.mobile, PETAL_CONFIG.spawnX.mobile),
+      ),
     );
     return () => cancelAnimationFrame(id);
   }, []);
@@ -118,7 +124,7 @@ export function Petals() {
       <div
         ref={rootRef}
         aria-hidden="true"
-        className={`petals pointer-events-none absolute inset-0 overflow-hidden ${
+        className={`petals pointer-events-none absolute inset-0 z-10 overflow-hidden ${
           paused ? "petals--paused" : ""
         }`}
       >
@@ -170,9 +176,9 @@ export function Petals() {
         onClick={() => setUserPaused((v) => !v)}
         aria-pressed={userPaused}
         aria-label={userPaused ? "花びらの演出を再開する" : "花びらの演出を止める"}
-        className="absolute right-5 bottom-3 z-20 flex h-9 items-center gap-1.5 px-2 font-sans text-[10px] tracking-[0.16em] text-ink-soft/70 transition-colors duration-300 hover:text-rose md:right-10"
+        className="absolute right-5 bottom-3 z-30 flex h-11 items-center gap-1.5 px-2 font-sans text-[11px] tracking-[0.16em] text-ink-soft transition-colors duration-300 hover:text-rose md:right-8 md:bottom-4"
       >
-        <span aria-hidden="true" className="text-[12px] leading-none">
+        <span aria-hidden="true" className="text-[13px] leading-none">
           {userPaused ? "◌" : "✿"}
         </span>
         {userPaused ? "花びらを流す" : "花びらを止める"}
