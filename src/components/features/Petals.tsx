@@ -1,27 +1,37 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
- * ファーストビューに、数枚の花びらが一度だけふわっと流れて消える演出。
+ * ファーストビューに、少数の花びらがゆっくり風に運ばれ、ときどき舞い続ける演出。
  *
- * - 初回表示で始まり、5秒以内にすべて消えて自然に終わる(ループしない)
- * - 終了後は要素ごと取り除く(スクロールで出入りしても再生しない)
- * - CSSアニメーションのみ(transform / opacity)。依存パッケージなし
+ * - 「間隔を空けて1枚ずつ現れる」方式。一斉出現・一斉消滅はしない
+ * - 1枚は 14〜22 秒かけて斜めに漂い、途中で薄れて消える(消えた要素は取り除く)
+ * - 同時表示の上限あり。ときどき長めの「花びらのない間」も入れる
+ * - ヒーローが画面外・タブが非表示の間は、出現を止め、漂っている花びらも
+ *   その場で静止(戻ったときに一斉発生や高速の追いつきは起きない)
+ * - CSSアニメーション(transform / opacity)のみ。依存パッケージなし
  * - 装飾なので aria-hidden、pointer-events: none
  * - prefers-reduced-motion では描画しない
  *
- * 調整は PETAL_CONFIG で行う(枚数・速度・大きさ・色)。
+ * 調整は PETAL_CONFIG で行う(枚数・間隔・速度・大きさ・色)。
  */
 export const PETAL_CONFIG = {
-  /** 流れる花びらの枚数 */
-  count: { desktop: 5, mobile: 4 },
+  /** 同時に表示する上限 */
+  maxConcurrent: { desktop: 4, mobile: 3 },
+  /** 次の1枚が現れるまでの間隔(秒)。この範囲でランダム */
+  gapSec: { min: 6, max: 12 },
+  /** ときどき入れる長めの間(秒)と、その確率 */
+  restSec: { min: 14, max: 22 },
+  restChance: 0.3,
+  /** 最初の1枚が現れるまでの秒数 */
+  firstDelaySec: 1.2,
+  /** 1枚が現れてから消えるまでの秒数 */
+  travelSec: { min: 14, max: 22 },
+  /** 漂う縦距離(ビューポート高さに対する%)。下まで落とし切らず途中で消える */
+  fallVh: { min: 38, max: 52 },
   /** 出現する横位置の範囲(%)。PCは写真のない左側の余白を中心に */
   spawnX: { desktop: [4, 46], mobile: [6, 94] },
-  /** 現れてから消えるまでの秒数(この範囲でランダム) */
-  travelSec: { min: 3.0, max: 3.8 },
-  /** 出現のずらし(秒)。travel と合わせて 5 秒以内に収める */
-  maxDelaySec: 1.1,
   /** 花びらの幅(px)。高さは自動で約1.6倍 */
   sizePx: { min: 10, max: 17 },
   /** 色はサイトのパレットから(ロゼ淡・生成りピンク・砂・くすみ紫) */
@@ -40,8 +50,8 @@ const SHAPES = [
 type Petal = {
   id: number;
   left: number;
-  delay: number;
   travel: number;
+  fallVh: number;
   size: number;
   driftX: number;
   swaySec: number;
@@ -55,52 +65,99 @@ type Petal = {
 const rand = (min: number, max: number) => min + Math.random() * (max - min);
 const pick = <T,>(arr: readonly T[]) => arr[Math.floor(Math.random() * arr.length)];
 
-function makePetals(count: number, spawnX: readonly [number, number]): Petal[] {
-  return Array.from({ length: count }, (_, i) => ({
-    id: i,
+function makePetal(id: number, spawnX: readonly [number, number]): Petal {
+  return {
+    id,
     left: rand(spawnX[0], spawnX[1]),
-    delay: rand(0, PETAL_CONFIG.maxDelaySec),
     travel: rand(PETAL_CONFIG.travelSec.min, PETAL_CONFIG.travelSec.max),
+    fallVh: rand(PETAL_CONFIG.fallVh.min, PETAL_CONFIG.fallVh.max),
     size: rand(PETAL_CONFIG.sizePx.min, PETAL_CONFIG.sizePx.max),
-    driftX: rand(-70, 70),
-    swaySec: rand(2.2, 3.4),
-    spinSec: rand(3.5, 5.5),
+    driftX: rand(40, 110) * (Math.random() > 0.5 ? 1 : -1),
+    swaySec: rand(3.2, 4.8),
+    spinSec: rand(7, 11),
     spinDir: Math.random() > 0.5 ? 1 : -1,
     tilt: rand(-40, 40),
     color: pick(PETAL_CONFIG.colors),
     shape: pick(SHAPES),
-  }));
+  };
 }
 
 export function Petals() {
-  const [petals, setPetals] = useState<Petal[] | null>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const nextId = useRef(0);
+  const [enabled, setEnabled] = useState(false); // reduced-motion でなければ true
+  const [desktop, setDesktop] = useState(false);
+  const [active, setActive] = useState(false); // ヒーローが見えていて、タブも表示中
+  const [petals, setPetals] = useState<Petal[]>([]);
 
+  // 初期化はクライアントのみ。reduced-motion では何もしない
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const desktop = window.matchMedia("(min-width: 768px)").matches;
-    // 描画後の次フレームで生成(初回描画を妨げない)
-    const raf = requestAnimationFrame(() =>
-      setPetals(
-        desktop
-          ? makePetals(PETAL_CONFIG.count.desktop, PETAL_CONFIG.spawnX.desktop)
-          : makePetals(PETAL_CONFIG.count.mobile, PETAL_CONFIG.spawnX.mobile),
-      ),
-    );
-    // 最長 (maxDelay + travel.max) 秒で全て消えるので、その後に要素を取り除く
-    const doneMs = (PETAL_CONFIG.maxDelaySec + PETAL_CONFIG.travelSec.max) * 1000 + 200;
-    const timer = window.setTimeout(() => setPetals(null), doneMs);
-    return () => {
-      cancelAnimationFrame(raf);
-      window.clearTimeout(timer);
-    };
+    const raf = requestAnimationFrame(() => {
+      setDesktop(window.matchMedia("(min-width: 768px)").matches);
+      setEnabled(true);
+    });
+    return () => cancelAnimationFrame(raf);
   }, []);
 
-  if (!petals) return null;
+  // 画面外・非表示タブでは止める
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el || !enabled) return;
+    let inView = false;
+    const sync = () => setActive(inView && !document.hidden);
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        inView = entry.isIntersecting;
+        sync();
+      },
+      { threshold: 0.1 },
+    );
+    io.observe(el);
+    document.addEventListener("visibilitychange", sync);
+    return () => {
+      io.disconnect();
+      document.removeEventListener("visibilitychange", sync);
+    };
+  }, [enabled]);
+
+  // 出現のスケジューラ:active の間だけ、間隔を空けて1枚ずつ足す
+  useEffect(() => {
+    if (!active) return;
+    const max = desktop ? PETAL_CONFIG.maxConcurrent.desktop : PETAL_CONFIG.maxConcurrent.mobile;
+    const spawnX = desktop ? PETAL_CONFIG.spawnX.desktop : PETAL_CONFIG.spawnX.mobile;
+    let timer = 0;
+    const schedule = (sec: number) => {
+      timer = window.setTimeout(() => {
+        setPetals((prev) =>
+          prev.length >= max ? prev : [...prev, makePetal(nextId.current++, spawnX)],
+        );
+        const rest = Math.random() < PETAL_CONFIG.restChance;
+        schedule(
+          rest
+            ? rand(PETAL_CONFIG.restSec.min, PETAL_CONFIG.restSec.max)
+            : rand(PETAL_CONFIG.gapSec.min, PETAL_CONFIG.gapSec.max),
+        );
+      }, sec * 1000);
+    };
+    // 初回だけ短め。画面に戻ったときも通常の間隔から始める(一斉発生しない)
+    schedule(
+      nextId.current === 0
+        ? PETAL_CONFIG.firstDelaySec
+        : rand(PETAL_CONFIG.gapSec.min, PETAL_CONFIG.gapSec.max),
+    );
+    return () => window.clearTimeout(timer);
+  }, [active, desktop]);
+
+  if (!enabled) return null;
 
   return (
     <div
+      ref={rootRef}
       aria-hidden="true"
-      className="petals pointer-events-none absolute inset-0 z-10 overflow-hidden"
+      className={`petals pointer-events-none absolute inset-0 z-10 overflow-hidden ${
+        active ? "" : "petals--paused"
+      }`}
     >
       {petals.map((p) => (
         <div
@@ -112,11 +169,17 @@ export function Petals() {
               width: p.size,
               height: p.size * 1.6,
               "--petal-drift": `${p.driftX}px`,
+              "--petal-fall": `${p.fallVh}vh`,
               "--petal-opacity": PETAL_CONFIG.opacity,
               animationDuration: `${p.travel}s`,
-              animationDelay: `${p.delay}s`,
             } as React.CSSProperties
           }
+          onAnimationEnd={(e) => {
+            // 漂い終えた花びらだけを取り除く(揺れ・回転は無限なので end は来ない)
+            if (e.animationName === "petal-drift") {
+              setPetals((prev) => prev.filter((q) => q.id !== p.id));
+            }
+          }}
         >
           <div className="petal__sway" style={{ animationDuration: `${p.swaySec}s` }}>
             <svg
