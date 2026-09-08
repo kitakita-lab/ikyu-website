@@ -64,17 +64,19 @@ body {
 }
 
 /*
-  花びらの演出(ファーストビュー・一度きり)
+  花びらの演出(ファーストビュー)
   - transform / opacity のみを動かし、レイアウトに影響させない
+  - 1枚は 14〜22 秒かけて斜めにゆっくり漂い、途中で薄れて消える
+  - 画面外・非表示タブでは .petals--paused でその場に静止する
   - 数値の調整は src/components/features/Petals.tsx の PETAL_CONFIG で行う
 */
 .petal {
   position: absolute;
-  top: -10%;
+  top: -8%;
   will-change: transform, opacity;
   opacity: 0;
-  animation-name: petal-drift-once;
-  animation-timing-function: ease-in;
+  animation-name: petal-drift;
+  animation-timing-function: linear;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
 }
@@ -88,29 +90,29 @@ body {
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
 }
-/* 上から斜めに漂い、ふっと消えて終わる */
-@keyframes petal-drift-once {
+/* 現れて、斜めにゆっくり漂い、下まで落ちる前に薄れて消える */
+@keyframes petal-drift {
   0% {
     transform: translate3d(0, 0, 0);
     opacity: 0;
   }
-  12% {
+  10% {
     opacity: var(--petal-opacity, 0.55);
   }
-  72% {
+  68% {
     opacity: var(--petal-opacity, 0.55);
   }
   100% {
-    transform: translate3d(var(--petal-drift, 40px), 60vh, 0);
+    transform: translate3d(var(--petal-drift, 60px), var(--petal-fall, 45vh), 0);
     opacity: 0;
   }
 }
 @keyframes petal-sway {
   from {
-    transform: translateX(-10px) rotate(-14deg);
+    transform: translateX(-9px) rotate(-12deg);
   }
   to {
-    transform: translateX(10px) rotate(14deg);
+    transform: translateX(9px) rotate(12deg);
   }
 }
 @keyframes petal-spin {
@@ -118,11 +120,16 @@ body {
     transform: rotateY(0deg) rotate(0deg);
   }
   50% {
-    transform: rotateY(180deg) rotate(30deg);
+    transform: rotateY(180deg) rotate(24deg);
   }
   100% {
     transform: rotateY(360deg) rotate(0deg);
   }
+}
+.petals--paused .petal,
+.petals--paused .petal__sway,
+.petals--paused .petal__spin {
+  animation-play-state: paused;
 }
 @media (prefers-reduced-motion: reduce) {
   .petals {
