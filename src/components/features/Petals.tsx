@@ -24,14 +24,22 @@ export const PETAL_CONFIG = {
   /** ときどき入れる長めの間(秒)と、その確率 */
   restSec: { min: 14, max: 22 },
   restChance: 0.3,
-  /** 最初の1枚が現れるまでの秒数 */
-  firstDelaySec: 1.2,
-  /** 1枚が現れてから消えるまでの秒数 */
-  travelSec: { min: 14, max: 22 },
-  /** 漂う縦距離(ビューポート高さに対する%)。下まで落とし切らず途中で消える */
-  fallVh: { min: 38, max: 52 },
-  /** 出現する横位置の範囲(%)。PCは写真のない左側の余白を中心に */
-  spawnX: { desktop: [4, 46], mobile: [6, 94] },
+  /** 初回表示:最初の1枚が現れるまでの秒数(ページを開いた直後だけ) */
+  firstDelaySec: 0.15,
+  /** 初回表示:2枚目が現れるまでの秒数(最初の1枚から) */
+  secondGapSec: { min: 3, max: 5 },
+  /** 漂う速さ(ビューポート高さ%/秒)。距離が変わっても速度はこの範囲に保つ */
+  speedVhPerSec: { min: 2.2, max: 3.0 },
+  /** 漂う縦距離(ビューポート高さに対する%)。スマホは写真の上を通過できる長さに */
+  fallVh: { desktop: [40, 56], mobile: [56, 74] },
+  /** 出現する横位置の範囲(%)。作品の中央を避け、余白・写真の背景側から */
+  spawnX: {
+    desktop: [[4, 58]],
+    mobile: [
+      [4, 28],
+      [72, 96],
+    ],
+  },
   /** 花びらの幅(px)。高さは自動で約1.6倍 */
   sizePx: { min: 10, max: 17 },
   /** 色はサイトのパレットから(ロゼ淡・生成りピンク・砂・くすみ紫) */
@@ -63,14 +71,25 @@ type Petal = {
 };
 
 const rand = (min: number, max: number) => min + Math.random() * (max - min);
-const pick = <T,>(arr: readonly T[]) => arr[Math.floor(Math.random() * arr.length)];
+const pick = <T,>(arr: readonly T[]) =>
+  arr[Math.floor(Math.random() * arr.length)];
 
-function makePetal(id: number, spawnX: readonly [number, number]): Petal {
+function makePetal(
+  id: number,
+  spawnX: readonly (readonly [number, number])[],
+  fall: readonly [number, number],
+): Petal {
+  const band = pick(spawnX);
+  const fallVh = rand(fall[0], fall[1]);
+  // 速度を一定範囲に保つため、距離から所要時間を決める(距離が長いほど時間も長い)
+  const travel =
+    fallVh /
+    rand(PETAL_CONFIG.speedVhPerSec.min, PETAL_CONFIG.speedVhPerSec.max);
   return {
     id,
-    left: rand(spawnX[0], spawnX[1]),
-    travel: rand(PETAL_CONFIG.travelSec.min, PETAL_CONFIG.travelSec.max),
-    fallVh: rand(PETAL_CONFIG.fallVh.min, PETAL_CONFIG.fallVh.max),
+    left: rand(band[0], band[1]),
+    travel,
+    fallVh,
     size: rand(PETAL_CONFIG.sizePx.min, PETAL_CONFIG.sizePx.max),
     driftX: rand(40, 110) * (Math.random() > 0.5 ? 1 : -1),
     swaySec: rand(3.2, 4.8),
@@ -124,28 +143,37 @@ export function Petals() {
   // 出現のスケジューラ:active の間だけ、間隔を空けて1枚ずつ足す
   useEffect(() => {
     if (!active) return;
-    const max = desktop ? PETAL_CONFIG.maxConcurrent.desktop : PETAL_CONFIG.maxConcurrent.mobile;
-    const spawnX = desktop ? PETAL_CONFIG.spawnX.desktop : PETAL_CONFIG.spawnX.mobile;
+    const max = desktop
+      ? PETAL_CONFIG.maxConcurrent.desktop
+      : PETAL_CONFIG.maxConcurrent.mobile;
+    const spawnX = desktop
+      ? PETAL_CONFIG.spawnX.desktop
+      : PETAL_CONFIG.spawnX.mobile;
+    const fall = desktop
+      ? PETAL_CONFIG.fallVh.desktop
+      : PETAL_CONFIG.fallVh.mobile;
     let timer = 0;
+    const nextGap = () =>
+      Math.random() < PETAL_CONFIG.restChance
+        ? rand(PETAL_CONFIG.restSec.min, PETAL_CONFIG.restSec.max)
+        : rand(PETAL_CONFIG.gapSec.min, PETAL_CONFIG.gapSec.max);
     const schedule = (sec: number) => {
       timer = window.setTimeout(() => {
+        const id = nextId.current++;
         setPetals((prev) =>
-          prev.length >= max ? prev : [...prev, makePetal(nextId.current++, spawnX)],
+          prev.length >= max ? prev : [...prev, makePetal(id, spawnX, fall)],
         );
-        const rest = Math.random() < PETAL_CONFIG.restChance;
+        // 初回表示の2枚目だけ早め(3〜5秒)。以降は通常の間隔
         schedule(
-          rest
-            ? rand(PETAL_CONFIG.restSec.min, PETAL_CONFIG.restSec.max)
-            : rand(PETAL_CONFIG.gapSec.min, PETAL_CONFIG.gapSec.max),
+          id === 0
+            ? rand(PETAL_CONFIG.secondGapSec.min, PETAL_CONFIG.secondGapSec.max)
+            : nextGap(),
         );
       }, sec * 1000);
     };
-    // 初回だけ短め。画面に戻ったときも通常の間隔から始める(一斉発生しない)
-    schedule(
-      nextId.current === 0
-        ? PETAL_CONFIG.firstDelaySec
-        : rand(PETAL_CONFIG.gapSec.min, PETAL_CONFIG.gapSec.max),
-    );
+    // ページを開いた直後だけ素早く1枚目を出す。
+    // 画面外・非表示タブから戻ったときは通常の間隔から始める(一斉発生しない)
+    schedule(nextId.current === 0 ? PETAL_CONFIG.firstDelaySec : nextGap());
     return () => window.clearTimeout(timer);
   }, [active, desktop]);
 
@@ -181,18 +209,24 @@ export function Petals() {
             }
           }}
         >
-          <div className="petal__sway" style={{ animationDuration: `${p.swaySec}s` }}>
-            <svg
-              viewBox="0 0 20 32"
-              className="petal__spin block h-full w-full"
-              style={{
-                animationDuration: `${p.spinSec}s`,
-                animationDirection: p.spinDir === 1 ? "normal" : "reverse",
-                rotate: `${p.tilt}deg`,
-              }}
+          {/* 現れ方は移動時間と切り離し、常に短い(0.7秒)フェードインにする */}
+          <div className="petal__fade">
+            <div
+              className="petal__sway"
+              style={{ animationDuration: `${p.swaySec}s` }}
             >
-              <path d={p.shape} fill={p.color} />
-            </svg>
+              <svg
+                viewBox="0 0 20 32"
+                className="petal__spin block h-full w-full"
+                style={{
+                  animationDuration: `${p.spinSec}s`,
+                  animationDirection: p.spinDir === 1 ? "normal" : "reverse",
+                  rotate: `${p.tilt}deg`,
+                }}
+              >
+                <path d={p.shape} fill={p.color} />
+              </svg>
+            </div>
           </div>
         </div>
       ))}

@@ -53,10 +53,14 @@ export default function HomePage() {
 
         <Petals />
 
-        <Container className="relative z-20">
+        {/*
+         * 重なり順:背景・写真(z-0) → 花びら(z-10) → 見出し・リンク(z-20)。
+         * Container 自体には z-index を付けず、花びらが写真の手前を漂えるようにする
+         */}
+        <Container className="relative">
           <div className="pt-12 md:flex md:min-h-[min(78vh,760px)] md:items-center md:pt-0">
             {/* 見出しは写真の溶ける縁に寄せて、ひとつの構図にする */}
-            <div className="md:w-[46%] md:pl-[10%]">
+            <div className="relative z-20 md:w-[46%] md:pl-[10%]">
               <h1 className="text-[27px] font-normal leading-[1.75] tracking-[0.08em] md:text-[36px]">
                 暮らしに花が
                 <br />
@@ -69,7 +73,7 @@ export default function HomePage() {
           </div>
 
           {/* スマホ:写真は画面の両端まで、縁はぼかさずそのまま置く */}
-          <div className="-mx-6 mt-7 md:hidden">
+          <div className="relative z-0 -mx-6 mt-7 md:hidden">
             <Image
               src={heroImage.src}
               alt={heroImage.alt}
@@ -80,7 +84,7 @@ export default function HomePage() {
               className="h-auto w-full"
             />
           </div>
-          <div className="mt-5 pb-14 md:hidden">
+          <div className="relative z-20 mt-5 pb-14 md:hidden">
             <ArrowLink href="/collection">作品を見る</ArrowLink>
           </div>
         </Container>

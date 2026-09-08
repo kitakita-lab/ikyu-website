@@ -72,7 +72,8 @@ body {
 */
 .petal {
   position: absolute;
-  top: -8%;
+  /* 上端の内側から始める(画面外で待つ時間をなくす) */
+  top: 1%;
   will-change: transform, opacity;
   opacity: 0;
   animation-name: petal-drift;
@@ -80,26 +81,34 @@ body {
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
 }
+.petal__fade {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  animation: petal-fade-in 0.7s ease-out forwards;
+}
 .petal__sway {
   width: 100%;
   height: 100%;
   animation: petal-sway ease-in-out infinite alternate;
+}
+@keyframes petal-fade-in {
+  to {
+    opacity: 1;
+  }
 }
 .petal__spin {
   animation-name: petal-spin;
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
 }
-/* 現れて、斜めにゆっくり漂い、下まで落ちる前に薄れて消える */
+/* 斜めにゆっくり漂い、下まで落ちる前に薄れて消える(現れ方は .petal__fade が担う) */
 @keyframes petal-drift {
   0% {
     transform: translate3d(0, 0, 0);
-    opacity: 0;
-  }
-  10% {
     opacity: var(--petal-opacity, 0.55);
   }
-  68% {
+  70% {
     opacity: var(--petal-opacity, 0.55);
   }
   100% {
@@ -127,6 +136,7 @@ body {
   }
 }
 .petals--paused .petal,
+.petals--paused .petal__fade,
 .petals--paused .petal__sway,
 .petals--paused .petal__spin {
   animation-play-state: paused;
