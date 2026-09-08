@@ -4,6 +4,7 @@ import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Heading } from "@/components/ui/Heading";
+import { NextEvent } from "@/components/features/NextEvent";
 import { events } from "@/content/events";
 
 /*
@@ -125,6 +126,13 @@ export default function EventsPage() {
           </Container>
         </Section>
       ))}
+
+      {/* これまでの記録から「次」へ。データは NEWS と同じ upcomingEvent を参照 */}
+      <Section space="compact" className="border-t border-line">
+        <Container width="narrow">
+          <NextEvent variant="compact" />
+        </Container>
+      </Section>
     </>
   );
 }
