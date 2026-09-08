@@ -7,7 +7,8 @@ import { Heading } from "@/components/ui/Heading";
 import { ArrowLink } from "@/components/ui/ArrowLink";
 import { LinkButton } from "@/components/ui/LinkButton";
 import { Petals } from "@/components/features/Petals";
-import { news, upcomingEvent, formatDate } from "@/content/news";
+import { NextEvent } from "@/components/features/NextEvent";
+import { news, formatDate } from "@/content/news";
 import { site } from "@/content/site";
 import Link from "next/link";
 
@@ -84,14 +85,14 @@ export default function HomePage() {
               className="h-auto w-full"
             />
           </div>
-          <div className="relative z-20 mt-5 pb-14 md:hidden">
+          <div className="relative z-20 mt-5 pb-12 md:hidden">
             <ArrowLink href="/collection">作品を見る</ArrowLink>
           </div>
         </Container>
       </section>
 
       {/* ───────── CONCEPT:言葉だけの間 ───────── */}
-      <section aria-labelledby="concept-heading" className="py-16 md:py-24">
+      <section aria-labelledby="concept-heading" className="py-14 md:py-24">
         <Container width="narrow">
           <Eyebrow>Concept</Eyebrow>
           <Heading as="h2" id="concept-heading" className="mt-4">
@@ -148,8 +149,15 @@ export default function HomePage() {
           </Link>
 
           <div className="py-12 md:ml-[54%] md:flex md:min-h-[min(88vh,820px)] md:flex-col md:justify-center md:py-20">
-            {/* 添える一枚:小さく、右へ寄せて */}
-            <div className="mb-8 hidden md:block md:w-[46%]">
+            {/*
+             * 添える一枚(PC):小さく、文章の前に。
+             * 「どの作品か」と「押せる」が分かるよう、作品名の添え書きを付けて
+             * 作品ページへつなぐ(飾りではなく、本文の「透明」を受ける一例)
+             */}
+            <Link
+              href="/collection/soap-bubble"
+              className="group mb-8 hidden md:block md:w-[46%]"
+            >
               <Image
                 src="/images/product-soap-bubble.webp"
                 alt="波形のアクリルスタンドに揺れるsoap bubble。しゃぼん玉のような虹色の透明ビーズに、窓の光と影が差す"
@@ -158,7 +166,13 @@ export default function HomePage() {
                 sizes="(min-width: 768px) 22vw, 60vw"
                 className="h-auto w-full"
               />
-            </div>
+              <span className="mt-2 block font-display text-[12px] tracking-[0.16em] text-ink-soft transition-colors duration-300 group-hover:text-rose">
+                soap bubble
+                <span aria-hidden="true" className="ml-1.5">
+                  →
+                </span>
+              </span>
+            </Link>
             <Eyebrow>Each piece, one of a kind.</Eyebrow>
             <Heading as="h2" id="collection-heading" className="mt-4">
               その日の気持ちに、
@@ -169,11 +183,14 @@ export default function HomePage() {
               光をすくいあげる透明、肌になじむ金、とじこめた季節の花。
               ふとした瞬間に、心をほどく作品たちです。
             </p>
-            <div className="mt-8">
-              <LinkButton href="/collection">作品を見る</LinkButton>
-            </div>
-            {/* スマホ:添える一枚は右へ寄せて小さく */}
-            <div className="mt-12 ml-auto w-[62%] md:hidden">
+            {/*
+             * スマホ:添える一枚は文章とボタンのあいだに。右へ寄せて小さく、
+             * 作品名を添えて作品ページへ(文章→一例→作品一覧、の順で読める)
+             */}
+            <Link
+              href="/collection/soap-bubble"
+              className="group mt-8 ml-auto block w-[62%] md:hidden"
+            >
               <Image
                 src="/images/product-soap-bubble.webp"
                 alt="波形のアクリルスタンドに揺れるsoap bubble。しゃぼん玉のような虹色の透明ビーズに、窓の光と影が差す"
@@ -182,6 +199,15 @@ export default function HomePage() {
                 sizes="62vw"
                 className="h-auto w-full"
               />
+              <span className="mt-2 block font-display text-[12px] tracking-[0.16em] text-ink-soft">
+                soap bubble
+                <span aria-hidden="true" className="ml-1.5">
+                  →
+                </span>
+              </span>
+            </Link>
+            <div className="mt-8 md:mt-8">
+              <LinkButton href="/collection">作品を見る</LinkButton>
             </div>
           </div>
         </Container>
@@ -221,24 +247,12 @@ export default function HomePage() {
         </Container>
       </Section>
 
-      {/* ───────── CARE:文字だけの、短い間 ───────── */}
-      <section aria-labelledby="care-heading" className="py-16 md:py-24">
-        <Container width="narrow" className="text-center">
-          <Heading as="h2" id="care-heading" display>
-            永く、そばに。
-          </Heading>
-          <p className="mt-6 text-[14px] leading-[2.2] text-ink-soft md:text-[15px]">
-            ikyuの作品は、お手入れやお直しのご相談をいつでも承っています。
-            お迎えいただいた日から、おつきあいが始まります。
-          </p>
-          <div className="mt-7">
-            <ArrowLink href="/care">お手入れとお直しのこと</ArrowLink>
-          </div>
-        </Container>
-      </section>
-
-      {/* ───────── NEWS ───────── */}
-      <section aria-labelledby="news-heading" className="border-t border-line py-14 md:py-20">
+      {/*
+       * ───────── NEWS:次の出店を先頭に ─────────
+       * ABOUT の「イベント会場でお会いできる日もあります」を受けて、
+       * 「次に実物を見られる日」をここで示す(CARE より前に置く)
+       */}
+      <section aria-labelledby="news-heading" className="py-16 md:py-24">
         <Container width="narrow">
           <div className="flex items-baseline justify-between">
             <div>
@@ -249,16 +263,10 @@ export default function HomePage() {
             </div>
             <ArrowLink href="/news">一覧へ</ArrowLink>
           </div>
-          {/* 「これから」の気配:次の出店をTOPにも一行だけ */}
-          {upcomingEvent && (
-            <p className="mt-6 text-[13px] leading-[2] tracking-[0.04em] text-ink-soft">
-              <span className="mr-3 border border-rose/50 px-2 py-0.5 font-sans text-[11px] tracking-[0.12em] text-rose">
-                次の出店・{upcomingEvent.status}
-              </span>
-              {upcomingEvent.name}({upcomingEvent.dateText})
-            </p>
-          )}
-          <ul className="mt-8 divide-y divide-line border-y border-line">
+          <div className="mt-8">
+            <NextEvent />
+          </div>
+          <ul className="mt-8 divide-y divide-line border-b border-line">
             {latestNews.map((post) => (
               <li key={post.slug}>
                 <Link
@@ -281,6 +289,22 @@ export default function HomePage() {
               </li>
             ))}
           </ul>
+        </Container>
+      </section>
+
+      {/* ───────── CARE:文字だけの、短い間 ───────── */}
+      <section aria-labelledby="care-heading" className="border-t border-line py-16 md:py-24">
+        <Container width="narrow" className="text-center">
+          <Heading as="h2" id="care-heading" display>
+            永く、そばに。
+          </Heading>
+          <p className="mt-6 text-[14px] leading-[2.2] text-ink-soft md:text-[15px]">
+            ikyuの作品は、お手入れやお直しのご相談をいつでも承っています。
+            お迎えいただいた日から、おつきあいが始まります。
+          </p>
+          <div className="mt-7">
+            <ArrowLink href="/care">お手入れとお直しのこと</ArrowLink>
+          </div>
         </Container>
       </section>
 

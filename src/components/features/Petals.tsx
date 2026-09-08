@@ -17,13 +17,17 @@ import { useEffect, useRef, useState } from "react";
  * 調整は PETAL_CONFIG で行う(枚数・間隔・速度・大きさ・色)。
  */
 export const PETAL_CONFIG = {
-  /** 同時に表示する上限 */
-  maxConcurrent: { desktop: 4, mobile: 3 },
-  /** 次の1枚が現れるまでの間隔(秒)。この範囲でランダム */
-  gapSec: { min: 6, max: 12 },
-  /** ときどき入れる長めの間(秒)と、その確率 */
-  restSec: { min: 14, max: 22 },
-  restChance: 0.3,
+  /**
+   * 同時に表示する上限。
+   * スマホは1枚の滞在時間が長い(落下距離が長い)ため、間隔を詰めると上限3では
+   * 出現の約2割が捨てられて見た目が変わらない。そのため4にしている(PCは4で足りる)
+   */
+  maxConcurrent: { desktop: 4, mobile: 4 },
+  /** 次の1枚が現れるまでの間隔(秒)。この範囲でランダム(以前は 6〜12) */
+  gapSec: { min: 4.5, max: 9 },
+  /** ときどき入れる長めの間(秒)と、その確率(以前は 14〜22 秒・30%) */
+  restSec: { min: 11, max: 17 },
+  restChance: 0.2,
   /** 初回表示:最初の1枚が現れるまでの秒数(ページを開いた直後だけ) */
   firstDelaySec: 0.15,
   /** 初回表示:2枚目が現れるまでの秒数(最初の1枚から) */
