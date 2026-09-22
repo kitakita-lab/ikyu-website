@@ -49,12 +49,20 @@ npm run lint   # ESLint
 },
 ```
 
-## 本番ドメインの設定
+## 本番ドメイン
 
-独自ドメイン取得後、環境変数を設定してください(OGP・canonical・sitemapに反映されます)。
+正規URLは `https://ikyumakes.com`(wwwなし)です。`www.ikyumakes.com` へのアクセスは
+Vercel側で 308 リダイレクトされます。
+
+サイト内で生成されるURL(canonical・og:url・OGP画像・sitemap・robots・構造化データ)は
+すべて `src/content/site.ts` の `site.url` から組み立てています。ドメインを変える場合は
+この1箇所だけを変更してください。
+
+一時的に別ドメインで確認したい場合のみ、環境変数で上書きできます(ビルド時に埋め込まれる
+ため、変更後は再デプロイが必要です)。
 
 ```
-NEXT_PUBLIC_SITE_URL=https://あなたのドメイン
+NEXT_PUBLIC_SITE_URL=https://例.com
 ```
 
 ## 今後の拡張メモ

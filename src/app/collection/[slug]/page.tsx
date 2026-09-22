@@ -9,7 +9,7 @@ import { ArrowLink } from "@/components/ui/ArrowLink";
 import { BuyButton } from "@/components/ui/BuyButton";
 import { JsonLd } from "@/components/features/JsonLd";
 import { products, getProduct, formatPrice } from "@/content/products";
-import { site } from "@/content/site";
+import { pageMetadata, site } from "@/content/site";
 
 /*
  * 作品詳細ページ(全作品共通テンプレート)。
@@ -33,12 +33,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: product.name,
     description: product.description,
-    alternates: { canonical: `/collection/${product.slug}` },
-    openGraph: {
+    ...pageMetadata(`/collection/${product.slug}`, {
       title: `${product.name} | ikyu`,
       description: product.description,
-      images: [{ url: product.images[0].src }],
-    },
+      images: [{ url: product.images[0].src, alt: product.images[0].alt }],
+    }),
   };
 }
 

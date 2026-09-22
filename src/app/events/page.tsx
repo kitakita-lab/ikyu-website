@@ -6,6 +6,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Heading } from "@/components/ui/Heading";
 import { NextEvent } from "@/components/features/NextEvent";
 import { events } from "@/content/events";
+import { pageMetadata } from "@/content/site";
 
 /*
  * イベント実績のページ。読者はお客様・ファン・イベント主催者。
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
   title: "EVENT イベントのこと",
   description:
     "ikyuのワークショップ・展示のこれまでの記録。季節のドライフラワーで「自分だけの一本」をつくるフラワーボトルワークショップなど、花にふれる時間をお届けしています。",
-  alternates: { canonical: "/events" },
+  ...pageMetadata("/events"),
 };
 
 export default function EventsPage() {

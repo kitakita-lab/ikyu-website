@@ -7,13 +7,13 @@ import { Heading } from "@/components/ui/Heading";
 import { ArrowLink } from "@/components/ui/ArrowLink";
 import { CtaBand } from "@/components/features/CtaBand";
 import { news, upcomingEvent, formatDate } from "@/content/news";
-import { site } from "@/content/site";
+import { pageMetadata, site } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "NEWS お知らせ・出店情報",
   description:
     "ikyuのお知らせ、イベント出店情報、新作のご案内の一覧です。最新の情報はInstagramでもお届けしています。",
-  alternates: { canonical: "/news" },
+  ...pageMetadata("/news"),
 };
 
 export default function NewsPage() {

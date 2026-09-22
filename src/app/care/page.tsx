@@ -5,13 +5,13 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Heading } from "@/components/ui/Heading";
 import { JsonLd } from "@/components/features/JsonLd";
 import { CtaBand } from "@/components/features/CtaBand";
-import { site } from "@/content/site";
+import { pageMetadata, site } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "CARE お手入れとお直しのこと",
   description:
     "ikyuのアクセサリーを永く楽しんでいただくための、日々のお手入れ方法と、金具のお取り替えなどお直しのご案内。花やレジンの移ろいとのつきあい方も。ご相談はInstagramのDMからどうぞ。",
-  alternates: { canonical: "/care" },
+  ...pageMetadata("/care"),
 };
 
 const careTips = [
