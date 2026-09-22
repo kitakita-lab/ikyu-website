@@ -66,7 +66,7 @@ body {
 /*
   花びらの演出(ファーストビュー)
   - transform / opacity のみを動かし、レイアウトに影響させない
-  - 1枚は 14〜22 秒かけて斜めにゆっくり漂い、途中で薄れて消える
+  - 1枚は十数秒〜30秒ほどかけて斜めにゆっくり漂い、途中で薄れて消える
   - 画面外・非表示タブでは .petals--paused でその場に静止する
   - 数値の調整は src/components/features/Petals.tsx の PETAL_CONFIG で行う
 */
@@ -106,10 +106,10 @@ body {
 @keyframes petal-drift {
   0% {
     transform: translate3d(0, 0, 0);
-    opacity: var(--petal-opacity, 0.55);
+    opacity: var(--petal-opacity, 0.66);
   }
   70% {
-    opacity: var(--petal-opacity, 0.55);
+    opacity: var(--petal-opacity, 0.66);
   }
   100% {
     transform: translate3d(var(--petal-drift, 60px), var(--petal-fall, 45vh), 0);

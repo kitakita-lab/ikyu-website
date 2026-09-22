@@ -3,11 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * ファーストビューに、少数の花びらがゆっくり風に運ばれ、ときどき舞い続ける演出。
+ * ファーストビューに、花びらがゆっくり風に運ばれ、パラパラと舞い続ける演出。
  *
  * - 「間隔を空けて1枚ずつ現れる」方式。一斉出現・一斉消滅はしない
- * - 1枚は 14〜22 秒かけて斜めに漂い、途中で薄れて消える(消えた要素は取り除く)
- * - 同時表示の上限あり。ときどき長めの「花びらのない間」も入れる
+ * - 1枚は十数秒〜30秒ほどかけて斜めに漂い、途中で薄れて消える(消えた要素は取り除く)
+ * - 同時表示の上限あり。ときどき短めの「花びらのない間」も入れる
  * - ヒーローが画面外・タブが非表示の間は、出現を止め、漂っている花びらも
  *   その場で静止(戻ったときに一斉発生や高速の追いつきは起きない)
  * - CSSアニメーション(transform / opacity)のみ。依存パッケージなし
@@ -19,37 +19,49 @@ import { useEffect, useRef, useState } from "react";
 export const PETAL_CONFIG = {
   /**
    * 同時に表示する上限。
-   * スマホは1枚の滞在時間が長い(落下距離が長い)ため、間隔を詰めると上限3では
-   * 出現の約2割が捨てられて見た目が変わらない。そのため4にしている(PCは4で足りる)
+   * 出現間隔を詰めた分、上限4では出現が捨てられて見た目が変わらないため6にした。
+   * 常時6枚出るわけではなく、実測の平均はPC・スマホとも約4枚(残りは上限の余裕)
    */
-  maxConcurrent: { desktop: 4, mobile: 4 },
-  /** 次の1枚が現れるまでの間隔(秒)。この範囲でランダム(以前は 6〜12) */
-  gapSec: { min: 4.5, max: 9 },
-  /** ときどき入れる長めの間(秒)と、その確率(以前は 14〜22 秒・30%) */
-  restSec: { min: 11, max: 17 },
-  restChance: 0.2,
+  maxConcurrent: { desktop: 6, mobile: 6 },
+  /** 次の1枚が現れるまでの間隔(秒)。この範囲でランダム(以前は 4.5〜9) */
+  gapSec: { min: 2.6, max: 5.4 },
+  /** ときどき入れる「花びらのない間」(秒)と、その確率(以前は 11〜17 秒・20%) */
+  restSec: { min: 8, max: 12 },
+  restChance: 0.12,
   /** 初回表示:最初の1枚が現れるまでの秒数(ページを開いた直後だけ) */
   firstDelaySec: 0.15,
-  /** 初回表示:2枚目が現れるまでの秒数(最初の1枚から) */
-  secondGapSec: { min: 3, max: 5 },
-  /** 漂う速さ(ビューポート高さ%/秒)。距離が変わっても速度はこの範囲に保つ */
-  speedVhPerSec: { min: 2.2, max: 3.0 },
+  /**
+   * 初回表示:2〜3枚目までを詰める間隔(秒)。
+   * 通常の間隔だと画面が埋まるまで20秒ほどかかり、開いた直後だけ手薄に見えるため
+   */
+  openingGapSec: { min: 1.2, max: 2.4 },
+  /** 上の詰めた間隔を使う枚数(これ以降は通常の間隔に戻る) */
+  openingCount: 3,
+  /**
+   * 漂う速さ(ビューポート高さ%/秒)。距離が変わっても速度はこの範囲に保つ。
+   * 範囲を広げて、すっと落ちる1枚とゆっくり浮かぶ1枚が混ざるようにした(以前は 2.2〜3.0)
+   */
+  speedVhPerSec: { min: 1.9, max: 3.4 },
   /** 漂う縦距離(ビューポート高さに対する%)。スマホは写真の上を通過できる長さに */
   fallVh: { desktop: [40, 56], mobile: [56, 74] },
-  /** 出現する横位置の範囲(%)。作品の中央を避け、余白・写真の背景側から */
+  /**
+   * 出現する横位置の範囲(%)。作品の中央を避け、余白・写真の背景側から。
+   * スマホは枚数を増やすと2本の筋に見えるため、中央3割は空けたまま帯を広げた
+   * (以前は 4〜28 / 72〜96)
+   */
   spawnX: {
     desktop: [[4, 58]],
     mobile: [
-      [4, 28],
-      [72, 96],
+      [4, 34],
+      [66, 96],
     ],
   },
-  /** 花びらの幅(px)。高さは自動で約1.6倍 */
-  sizePx: { min: 10, max: 17 },
+  /** 花びらの幅(px)。高さは自動で約1.6倍。大小の差を強めた(以前は 10〜17) */
+  sizePx: { min: 11, max: 20 },
   /** 色はサイトのパレットから(ロゼ淡・生成りピンク・砂・くすみ紫) */
   colors: ["#b08a8f", "#cdb4b6", "#e2cfbf", "#b6a5b3"],
-  /** 不透明度の上限(作品より目立たせない) */
-  opacity: 0.55,
+  /** 不透明度の上限(見出し・リンクは常に花びらの手前。以前は 0.55) */
+  opacity: 0.66,
 } as const;
 
 /** 花びらの形(3種)。viewBox 20x32 の縦長の花弁 */
@@ -95,9 +107,10 @@ function makePetal(
     travel,
     fallVh,
     size: rand(PETAL_CONFIG.sizePx.min, PETAL_CONFIG.sizePx.max),
-    driftX: rand(40, 110) * (Math.random() > 0.5 ? 1 : -1),
-    swaySec: rand(3.2, 4.8),
-    spinSec: rand(7, 11),
+    // 横流れ・揺れ・回転の幅を広げ、隣の花びらと動きが揃って見えないようにする
+    driftX: rand(30, 140) * (Math.random() > 0.5 ? 1 : -1),
+    swaySec: rand(2.8, 5.6),
+    spinSec: rand(6, 13),
     spinDir: Math.random() > 0.5 ? 1 : -1,
     tilt: rand(-40, 40),
     color: pick(PETAL_CONFIG.colors),
@@ -167,10 +180,13 @@ export function Petals() {
         setPetals((prev) =>
           prev.length >= max ? prev : [...prev, makePetal(id, spawnX, fall)],
         );
-        // 初回表示の2枚目だけ早め(3〜5秒)。以降は通常の間隔
+        // 開いた直後の数枚だけ間隔を詰める。以降は通常の間隔
         schedule(
-          id === 0
-            ? rand(PETAL_CONFIG.secondGapSec.min, PETAL_CONFIG.secondGapSec.max)
+          id < PETAL_CONFIG.openingCount - 1
+            ? rand(
+                PETAL_CONFIG.openingGapSec.min,
+                PETAL_CONFIG.openingGapSec.max,
+              )
             : nextGap(),
         );
       }, sec * 1000);
