@@ -8,7 +8,7 @@ export const site = {
   name: "ikyu",
   tagline: "暮らしに花が咲きますように。",
   description:
-    "ikyu(イキュウ)は、北海道札幌のハンドメイドアクセサリーブランド。生花から育てたドライフラワーや透明感のある素材を、ひとつずつ手しごとで仕上げています。暮らしに花が咲きますように。",
+    "ikyu(イキュ)は、北海道札幌のハンドメイドアクセサリーブランド。生花から育てたドライフラワーや透明感のある素材を、ひとつずつ手しごとで仕上げています。暮らしに花が咲きますように。",
   /** 正規URL(wwwなし)。環境変数 NEXT_PUBLIC_SITE_URL で上書きできます */
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://ikyumakes.com",
   instagram: {
