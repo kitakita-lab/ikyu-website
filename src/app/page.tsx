@@ -9,11 +9,11 @@ import { LinkButton } from "@/components/ui/LinkButton";
 import { Petals } from "@/components/features/Petals";
 import { NextEvent } from "@/components/features/NextEvent";
 import { news, formatDate } from "@/content/news";
-import { site } from "@/content/site";
+import { pageMetadata, site } from "@/content/site";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  alternates: { canonical: "/" },
+  ...pageMetadata("/"),
 };
 
 /**

@@ -6,7 +6,7 @@ import { Heading } from "@/components/ui/Heading";
 import { ArrowLink } from "@/components/ui/ArrowLink";
 import { JsonLd } from "@/components/features/JsonLd";
 import { news, getPost, formatDate } from "@/content/news";
-import { site } from "@/content/site";
+import { pageMetadata, site } from "@/content/site";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -23,13 +23,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: post.title,
     description: post.body[0],
-    alternates: { canonical: `/news/${post.slug}` },
-    openGraph: {
+    ...pageMetadata(`/news/${post.slug}`, {
       type: "article",
       title: `${post.title} | ikyu`,
       description: post.body[0],
-      images: [{ url: "/images/og.jpg", width: 1200, height: 630 }],
-    },
+    }),
   };
 }
 

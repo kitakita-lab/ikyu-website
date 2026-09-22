@@ -5,13 +5,13 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Heading } from "@/components/ui/Heading";
 import { LinkButton } from "@/components/ui/LinkButton";
 import { ArrowLink } from "@/components/ui/ArrowLink";
-import { site } from "@/content/site";
+import { pageMetadata, site } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "CONTACT お問い合わせ",
   description:
     "ikyuへのお問い合わせはInstagramのDMからどうぞ。作品のこと、お直しのこと、イベント出店のこと、お気軽にご連絡ください。",
-  alternates: { canonical: "/contact" },
+  ...pageMetadata("/contact"),
 };
 
 export default function ContactPage() {

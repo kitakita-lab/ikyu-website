@@ -5,7 +5,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { JsonLd } from "@/components/features/JsonLd";
-import { site } from "@/content/site";
+import { openGraphDefaults, site } from "@/content/site";
 import "./globals.css";
 
 /*
@@ -35,19 +35,9 @@ export const metadata: Metadata = {
   },
   description: site.description,
   openGraph: {
-    type: "website",
-    locale: "ja_JP",
-    siteName: "ikyu",
+    ...openGraphDefaults,
     title: "ikyu | 札幌のハンドメイドアクセサリー",
     description: site.description,
-    images: [
-      {
-        url: "/images/og.jpg",
-        width: 1200,
-        height: 630,
-        alt: "白い布を背景に、アクリルスタンドで揺れるikyuのピアス。金の花びらと白い小花、細いゴールドのライン",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",

@@ -6,6 +6,7 @@ import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Heading } from "@/components/ui/Heading";
 import { products, formatPrice } from "@/content/products";
+import { pageMetadata } from "@/content/site";
 
 /*
  * COLLECTION = 作品一覧。導線は Collection → 作品詳細 → STORES(決済)。
@@ -17,11 +18,7 @@ export const metadata: Metadata = {
   title: "COLLECTION 作品のこと",
   description:
     "ikyuのハンドメイドアクセサリーの一覧。ひとつずつ手しごとでうまれる一点ものを、STORESからお迎えいただけます。",
-  alternates: { canonical: "/collection" },
-  openGraph: {
-    title: "COLLECTION 作品のこと | ikyu",
-    images: [{ url: "/images/og.jpg", width: 1200, height: 630 }],
-  },
+  ...pageMetadata("/collection", { title: "COLLECTION 作品のこと | ikyu" }),
 };
 
 export default function CollectionPage() {

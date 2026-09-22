@@ -5,17 +5,13 @@ import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Heading } from "@/components/ui/Heading";
 import { CtaBand } from "@/components/features/CtaBand";
-import { site } from "@/content/site";
+import { pageMetadata, site } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "ikyuとつくり手のこと",
   description:
     "「暮らしに花が咲きますように。」ikyuのコンセプトと、生花からドライフラワーを育てて作品にするまでの手しごと、札幌の作り手のことをご紹介します。",
-  alternates: { canonical: "/about" },
-  openGraph: {
-    title: "ikyuとつくり手のこと | ikyu",
-    images: [{ url: "/images/og.jpg", width: 1200, height: 630 }],
-  },
+  ...pageMetadata("/about", { title: "ikyuとつくり手のこと | ikyu" }),
 };
 
 export default function AboutPage() {
