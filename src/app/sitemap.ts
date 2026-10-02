@@ -3,6 +3,9 @@ import { news } from "@/content/news";
 import { products } from "@/content/products";
 import { site } from "@/content/site";
 
+// 静的書き出し(output: "export")ではビルド時に1回だけ生成する。
+export const dynamic = "force-static";
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages = [
     "",

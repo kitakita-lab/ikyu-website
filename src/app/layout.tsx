@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Zen_Old_Mincho } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { BottomNav } from "@/components/layout/BottomNav";
@@ -97,8 +96,6 @@ export default function RootLayout({
         <BottomNav />
         <JsonLd data={organizationJsonLd} />
         <JsonLd data={webSiteJsonLd} />
-        {/* ページビュー計測(購入ボタンのbuy_clickイベントはBuyButton側で送信) */}
-        <Analytics />
       </body>
     </html>
   );

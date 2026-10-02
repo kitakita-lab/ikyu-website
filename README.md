@@ -16,6 +16,21 @@ npm run build  # 本番ビルド
 npm run lint   # ESLint
 ```
 
+## デプロイ（Cloudflare Pages）
+
+`output: "export"` で全ページを静的HTML（`out/`）に書き出し、Cloudflare Pages で配信しています。
+`main` への push で本番に自動デプロイされます。
+
+| 項目 | 設定値 |
+|---|---|
+| Framework preset | Next.js (Static HTML Export) |
+| Build command | `npx next build` |
+| Build output directory | `out` |
+| 環境変数 | `NODE_VERSION=22` |
+
+- サーバー機能（API Route・ISR・画像最適化サーバー・middleware）は使えません。追加する場合はホスティング方針から見直すこと。
+- `next/image` は最適化なし（`images.unoptimized`）。写真は WebP にしてから `public/images/` に置く。
+
 ## コンテンツの更新方法
 
 コードを書かなくても、以下のファイルの編集だけで更新できます。
