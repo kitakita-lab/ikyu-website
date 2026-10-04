@@ -9,7 +9,7 @@ import { products, formatPrice } from "@/content/products";
 import { pageMetadata } from "@/content/site";
 
 /*
- * COLLECTION = 作品一覧。導線は Collection → 作品詳細 → STORES(決済)。
+ * COLLECTION = 作品一覧。導線は Collection → 作品詳細 → minne(決済)。
  * カード全体が詳細ページへのリンク。購入ボタンはここには置かない(詳細ページの役割)。
  * 商品の追加・差し替えは src/content/products.ts だけで完結します。
  */
@@ -17,7 +17,7 @@ import { pageMetadata } from "@/content/site";
 export const metadata: Metadata = {
   title: "COLLECTION 作品のこと",
   description:
-    "ikyuのハンドメイドアクセサリーの一覧。ひとつずつ手しごとでうまれる一点ものを、STORESからお迎えいただけます。",
+    "ikyuのハンドメイドアクセサリーの一覧。ひとつずつ手しごとでうまれる一点ものを、minneからお迎えいただけます。",
   ...pageMetadata("/collection", { title: "COLLECTION 作品のこと | ikyu" }),
 };
 

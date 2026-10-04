@@ -39,6 +39,7 @@ npm run lint   # ESLint
 |---|---|
 | お知らせ・出店情報の追加 | `src/content/news.ts`(配列の先頭に追加) |
 | Instagram / minne のURL、住所表記 | `src/content/site.ts` |
+| 作品ごとの購入先(minneの作品ページURL) | `src/content/products.ts` の `minneUrl` |
 | ナビゲーションの項目 | `src/content/site.ts` の `nav` |
 | 写真の差し替え | `public/images/`(同名で上書き) |
 
