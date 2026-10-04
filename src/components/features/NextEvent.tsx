@@ -39,9 +39,14 @@ export function NextEvent({ variant = "home" }: Props) {
         <p className="mt-3 text-[15px] leading-[2] tracking-[0.04em]">{ev.name}</p>
         <p className="text-[13px] leading-[2] tracking-[0.04em] text-ink-soft">
           ikyuの出店は
-          <time dateTime={ev.exhibitDate} className="whitespace-nowrap">
-            {ev.exhibitDateText}
-          </time>
+          {/* 複数日の出店は1つの datetime で表せないため time を使わない(初日だけと誤読されるのを防ぐ) */}
+          {ev.exhibitEndDate ? (
+            <span className="whitespace-nowrap">{ev.exhibitDateText}</span>
+          ) : (
+            <time dateTime={ev.exhibitDate} className="whitespace-nowrap">
+              {ev.exhibitDateText}
+            </time>
+          )}
           です。
         </p>
         <div className="mt-3">

@@ -52,7 +52,13 @@ export default function NewsPage() {
                   {[
                     {
                       label: "ikyuの出店日",
-                      value: (
+                      // 複数日の出店は1つの datetime で表せないため time を使わない(初日だけと誤読されるのを防ぐ)
+                      value: upcomingEvent.exhibitEndDate ? (
+                        <span>
+                          {upcomingEvent.exhibitDate.slice(0, 4)}年
+                          {upcomingEvent.exhibitDateText}
+                        </span>
+                      ) : (
                         <time dateTime={upcomingEvent.exhibitDate}>
                           {upcomingEvent.exhibitDate.slice(0, 4)}年
                           {upcomingEvent.exhibitDateText}
