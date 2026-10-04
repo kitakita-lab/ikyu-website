@@ -6,7 +6,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Heading } from "@/components/ui/Heading";
 import { ArrowLink } from "@/components/ui/ArrowLink";
 import { CtaBand } from "@/components/features/CtaBand";
-import { news, upcomingEvent, formatDate } from "@/content/news";
+import { news, upcomingEvent, formatDate, isPartialExhibit } from "@/content/news";
 import { pageMetadata, site } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -52,7 +52,13 @@ export default function NewsPage() {
                   {[
                     {
                       label: "ikyuの出店日",
-                      value: (
+                      // 複数日の出店は1つの datetime で表せないため time を使わない(初日だけと誤読されるのを防ぐ)
+                      value: upcomingEvent.exhibitEndDate ? (
+                        <span>
+                          {upcomingEvent.exhibitDate.slice(0, 4)}年
+                          {upcomingEvent.exhibitDateText}
+                        </span>
+                      ) : (
                         <time dateTime={upcomingEvent.exhibitDate}>
                           {upcomingEvent.exhibitDate.slice(0, 4)}年
                           {upcomingEvent.exhibitDateText}
@@ -74,15 +80,21 @@ export default function NewsPage() {
                     </div>
                   ))}
                 </dl>
-                <p className="mt-4 text-[13px] leading-[2.1] text-ink-soft">
-                  ikyuの出店は{upcomingEvent.exhibitDateText}です。
-                  ご来場の際は、日にちにご注意ください。
-                  {upcomingEvent.status === "予定" && (
-                    <span className="block">
-                      会場などくわしくは決まり次第、こちらとInstagramでお知らせします。
-                    </span>
-                  )}
-                </p>
+                {(isPartialExhibit(upcomingEvent) || upcomingEvent.status === "予定") && (
+                  <p className="mt-4 text-[13px] leading-[2.1] text-ink-soft">
+                    {/* 一部の日だけ出店するときだけ、出店日を念押しして来場日の注意を添える */}
+                    {isPartialExhibit(upcomingEvent) && (
+                      <>
+                        ikyuの出店は{upcomingEvent.exhibitDateText}です。ご来場の際は、日にちにご注意ください。
+                      </>
+                    )}
+                    {upcomingEvent.status === "予定" && (
+                      <span className="block">
+                        会場などくわしくは決まり次第、こちらとInstagramでお知らせします。
+                      </span>
+                    )}
+                  </p>
+                )}
               </div>
             ) : (
               <p className="mt-4 text-[14px] leading-[2.1] text-ink-soft">

@@ -29,9 +29,14 @@ export type NewsPost = {
  */
 export type UpcomingEvent = {
   name: string;
-  /** ikyuが出店する日(ISO)。表示の日付・datetime 属性に使う */
+  /** ikyuが出店する日(ISO)。複数日のときは初日。表示の日付・datetime 属性に使う */
   exhibitDate: string; // 例: "2026-11-23"
-  /** ikyuが出店する日の表記。一部の日だけなら「のみ」を必ず付ける */
+  /** ikyuの出店が複数日のときの最終日(ISO)。1日だけなら書かない */
+  exhibitEndDate?: string; // 例: "2026-11-23"
+  /**
+   * ikyuが出店する日の表記。一部の日だけなら「のみ」を必ず付ける
+   * (「のみ」があると、イベント全体の日程と日にちの注意書きも併せて表示されます)
+   */
   exhibitDateText: string; // 例: "11月23日(月)のみ"
   /** イベント全体の開催日程(主催者の日程)。ikyuの出店日と混同しない */
   eventDateText: string; // 例: "2026年11月22日(日)・23日(月)"
@@ -41,11 +46,17 @@ export type UpcomingEvent = {
 
 export const upcomingEvent: UpcomingEvent | null = {
   name: "サッポロモノヴィレッジ",
-  exhibitDate: "2026-11-23",
-  exhibitDateText: "11月23日(月)のみ",
-  eventDateText: "2026年11月22日(日)・23日(月)",
+  exhibitDate: "2026-11-22",
+  exhibitEndDate: "2026-11-23",
+  exhibitDateText: "11月22日(日)・23日(月・祝)",
+  eventDateText: "2026年11月22日(日)・23日(月・祝)",
   status: "予定",
 };
+
+/** ikyuの出店がイベントの一部の日だけか(exhibitDateText の「のみ」で判定する) */
+export function isPartialExhibit(ev: UpcomingEvent): boolean {
+  return ev.exhibitDateText.includes("のみ");
+}
 
 /**
  * お知らせの追加はこの配列の先頭に足すだけです(新しい順)。
