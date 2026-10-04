@@ -13,7 +13,7 @@ import { pageMetadata, site } from "@/content/site";
 
 /*
  * 作品詳細ページ(全作品共通テンプレート)。
- * 役割は「作品を理解し、好きになってもらう」こと。決済はSTORESに任せる。
+ * 役割は「作品を理解し、好きになってもらう」こと。決済はminneに任せる。
  * 構成: メイン写真→作品名→価格→説明→ギャラリー→サイズ→素材→購入ボタン。
  * 商品の追加は src/content/products.ts に1件足すだけで、このページが自動生成される。
  */
@@ -47,6 +47,8 @@ export default async function ProductPage({ params }: Props) {
   if (!product) notFound();
 
   const [main, ...gallery] = product.images;
+  // 作品ページのURLが確認できていない作品は、minneのショップトップへ案内する
+  const buyUrl = product.minneUrl ?? site.minne.url;
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -70,13 +72,8 @@ export default async function ProductPage({ params }: Props) {
     description: product.description,
     image: `${site.url}${main.src}`,
     brand: { "@type": "Brand", name: "ikyu" },
-    offers: {
-      "@type": "Offer",
-      price: product.price,
-      priceCurrency: "JPY",
-      url: product.storesUrl,
-      availability: "https://schema.org/InStock",
-    },
+    // offers(購入URL・価格・在庫)は出さない。minne上の作品ページURLと在庫を
+    // このサイトのデータでは保証できないため(確認できない情報を構造化データに書かない)。
   };
 
   return (
@@ -145,11 +142,13 @@ export default async function ProductPage({ params }: Props) {
           </div>
         </dl>
 
-        {/* ⑧ STORESで購入する */}
+        {/* ⑧ minneで購入する */}
         <div className="mt-12">
-          <BuyButton href={product.storesUrl} item={product.slug} />
+          <BuyButton href={buyUrl} item={product.slug} />
           <p className="mt-4 text-[12px] leading-[2] tracking-[0.06em] text-ink-soft">
-            ご購入のお手続きは、STORESにて承ります。
+            {product.minneUrl
+              ? "ご購入のお手続きは、minneにて承ります。"
+              : "minneのikyuショップが開きます。ご購入のお手続きは、minneにて承ります。"}
           </p>
         </div>
 

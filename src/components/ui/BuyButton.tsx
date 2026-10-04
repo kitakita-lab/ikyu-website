@@ -7,7 +7,7 @@ type Props = {
 };
 
 /**
- * STORESの商品個別ページへ遷移する購入ボタン。
+ * minne(作品ページ、未設定ならショップトップ)へ遷移する購入ボタン。
  * 見た目は LinkButton(solid) と同一に保つ(新しいデザイン言語を持ち込まない)。
  * item は計測用の商品識別子(現在は未使用。計測ツール導入時にイベント送信へ使う)。
  */
@@ -20,7 +20,7 @@ export function BuyButton({ href, item }: Props) {
       data-item={item}
       className="inline-block bg-ink px-10 py-4 font-sans text-[13px] tracking-[0.16em] text-base transition-colors duration-300 hover:bg-rose"
     >
-      STORESで購入する
+      minneで購入する
       <span aria-hidden="true" className="ml-2">
         ↗
       </span>

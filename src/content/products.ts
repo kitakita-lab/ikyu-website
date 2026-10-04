@@ -4,7 +4,7 @@
  * /collection/[slug] の詳細ページが自動生成されます。
  *
  * ★★ 公開前に必ず差し替えること(現在はプレースホルダー)★★
- * - storesUrl: STORESの「商品個別ページ」のURL(ショップトップではない)
+ * - minneUrl: minneの「作品個別ページ」のURL(確認できたものだけ。推測で作らない)
  * - price: soap bubble / ネックカフ の正式価格
  * - size: 実測値(現在は「—」表示)
  * - material: 金具の正式表記(例: 真鍮・K16GP など)
@@ -28,8 +28,11 @@ export type Product = {
   size: string;
   /** 素材表記 */
   material: string;
-  /** STORESの商品個別ページURL */
-  storesUrl: string;
+  /**
+   * minneの作品個別ページURL。確認できたものだけ書く。
+   * 未設定のあいだ、購入ボタンは minne のショップトップ(site.minne.url)を開く
+   */
+  minneUrl?: string;
 };
 
 export const products: Product[] = [
@@ -56,7 +59,7 @@ export const products: Product[] = [
     ],
     size: "—", // ★差し替え: 例)内径 約6cm
     material: "ドライフラワー / レジン / 金属パーツ", // ★差し替え: 金具の正式表記
-    storesUrl: "https://ikyu.stores.jp/items/XXXXXXXXXXXX", // ★差し替え
+    // minneUrl: ★minneの作品ページURLが確認できたら追加
   },
   {
     slug: "flower-ring",
@@ -72,7 +75,7 @@ export const products: Product[] = [
     ],
     size: "—", // ★差し替え: 例)フリーサイズ(10号前後で調整可)
     material: "ドライフラワー / レジン / 金属パーツ", // ★差し替え
-    storesUrl: "https://ikyu.stores.jp/items/XXXXXXXXXXXX", // ★差し替え
+    // minneUrl: ★minneの作品ページURLが確認できたら追加
   },
   {
     slug: "soap-bubble",
@@ -89,7 +92,7 @@ export const products: Product[] = [
     ],
     size: "—", // ★差し替え: 例)全長 約3cm
     material: "ガラスビーズ / 金属パーツ", // ★差し替え
-    storesUrl: "https://ikyu.stores.jp/items/XXXXXXXXXXXX", // ★差し替え
+    // minneUrl: ★minneの作品ページURLが確認できたら追加
   },
   {
     slug: "neck-cuff",
@@ -105,7 +108,7 @@ export const products: Product[] = [
     ],
     size: "—", // ★差し替え
     material: "金属パーツ / レジン", // ★差し替え
-    storesUrl: "https://ikyu.stores.jp/items/XXXXXXXXXXXX", // ★差し替え
+    // minneUrl: ★minneの作品ページURLが確認できたら追加
   },
 ];
 
