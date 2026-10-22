@@ -1,0 +1,81 @@
+/*
+ * ikyu 営業資料 共通スタイル（A4横）
+ * 色・書体は ikyu 公式サイト（src/app/globals.css）と同じトークンを使う。
+ * スマホで読めるよう、本文は最小 12.5pt・1ページの情報量を絞る。
+ */
+@font-face { font-family: "Zen Old Mincho"; font-weight: 400; src: url(../fonts/ZenOldMincho-400.ttf); }
+@font-face { font-family: "Zen Old Mincho"; font-weight: 600; src: url(../fonts/ZenOldMincho-600.ttf); }
+@font-face { font-family: "Zen Kaku Gothic New"; font-weight: 400; src: url(../fonts/ZenKakuGothicNew-400.ttf); }
+@font-face { font-family: "Zen Kaku Gothic New"; font-weight: 500; src: url(../fonts/ZenKakuGothicNew-500.ttf); }
+@font-face { font-family: "Cormorant Garamond"; font-weight: 400; src: url(../fonts/CormorantGaramond-400.ttf); }
+@font-face { font-family: "Cormorant Garamond"; font-weight: 500; src: url(../fonts/CormorantGaramond-500.ttf); }
+@font-face { font-family: "Cormorant Garamond"; font-style: italic; font-weight: 400; src: url(../fonts/CormorantGaramond-400i.ttf); }
+
+:root {
+  --base: #faf8f5;
+  --base-soft: #f1e8da;
+  --ink: #45362f;
+  --ink-soft: #75635a;
+  --rose: #8a5b62;
+  --rose-soft: #b08a8f;
+  --line: #e4d8c5;
+  --serif: "Zen Old Mincho", serif;
+  --sans: "Zen Kaku Gothic New", sans-serif;
+  --display: "Cormorant Garamond", serif;
+}
+
+@page { size: 297mm 210mm; margin: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { background: #ddd; color: var(--ink); font-family: var(--serif); font-size: 12.5pt; line-height: 1.85; letter-spacing: 0.03em; }
+
+.page {
+  position: relative; width: 297mm; height: 210mm; overflow: hidden;
+  background: var(--base); padding: 15mm 18mm 17mm; margin: 0 auto 8mm;
+  page-break-after: always; break-after: page;
+  display: flex; flex-direction: column;
+}
+@media print { body { background: none; } .page { margin: 0; } }
+
+/* 見出し */
+.eyebrow { font-family: var(--display); font-size: 13pt; letter-spacing: 0.22em; color: var(--rose); text-transform: uppercase; }
+h1, h2 { font-weight: 400; letter-spacing: 0.08em; line-height: 1.5; }
+h2 { font-size: 23pt; margin-top: 1.5mm; }
+h3 { font-size: 14.5pt; font-weight: 600; letter-spacing: 0.06em; line-height: 1.5; }
+.lead { font-size: 13.5pt; line-height: 2; color: var(--ink); }
+.soft { color: var(--ink-soft); }
+.small { font-size: 10.5pt; line-height: 1.7; color: var(--ink-soft); font-family: var(--sans); }
+.rule { width: 14mm; height: 0.4mm; background: var(--rose-soft); margin: 5mm 0; }
+.num { font-family: var(--display); font-weight: 500; color: var(--rose); letter-spacing: 0.02em; line-height: 1; }
+
+/* ページ下部（出典・ページ番号） */
+.foot { position: absolute; left: 18mm; right: 18mm; bottom: 7mm; display: flex; justify-content: space-between; align-items: baseline; font-family: var(--sans); font-size: 8.5pt; color: var(--ink-soft); letter-spacing: 0.05em; }
+.foot .brand { font-family: var(--display); font-size: 11pt; letter-spacing: 0.2em; color: var(--ink); }
+
+/* 写真 */
+.ph { position: relative; overflow: hidden; background: var(--base-soft); }
+.ph img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ph figcaption { position: absolute; left: 0; right: 0; bottom: 0; padding: 1.2mm 2.5mm; font-family: var(--sans); font-size: 8.5pt; color: #fff; background: linear-gradient(transparent, rgba(40,30,25,.55)); }
+
+/* 利用許諾が未確認の写真に付ける「仮配置」表示（?final で消える） */
+.tentative::after {
+  content: "仮配置｜営業資料での利用許諾 確認中"; position: absolute; top: 2mm; left: 2mm;
+  font-family: var(--sans); font-size: 7.5pt; letter-spacing: 0.04em; color: var(--rose);
+  background: rgba(250,248,245,.92); border: 0.3mm solid var(--rose-soft); padding: 0.4mm 1.8mm;
+}
+body.final .tentative::after { display: none; }
+
+/* まだ無い写真の枠 */
+.placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 1.5mm; border: 0.35mm dashed var(--rose-soft); background: repeating-linear-gradient(135deg, var(--base) 0 3mm, var(--base-soft) 3mm 3.4mm); color: var(--ink-soft); font-family: var(--sans); font-size: 10pt; line-height: 1.6; padding: 4mm; }
+.placeholder b { font-weight: 500; color: var(--rose); font-size: 10.5pt; }
+
+/* 汎用 */
+.row { display: flex; gap: 8mm; }
+.col { display: flex; flex-direction: column; }
+.grow { flex: 1; min-height: 0; }
+.card { background: #fff; border: 0.3mm solid var(--line); padding: 5mm 6mm; }
+.tag { display: inline-block; font-family: var(--sans); font-size: 9.5pt; letter-spacing: 0.08em; color: var(--rose); border: 0.3mm solid var(--rose-soft); border-radius: 10mm; padding: 0.3mm 3mm; }
+ul.dots { list-style: none; }
+ul.dots li { position: relative; padding-left: 5mm; }
+ul.dots li::before { content: ""; position: absolute; left: 0.5mm; top: 0.85em; width: 1.6mm; height: 1.6mm; border-radius: 50%; background: var(--rose-soft); transform: translateY(-50%); }
+a { color: inherit; text-decoration: none; }
