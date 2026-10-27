@@ -1,0 +1,54 @@
+# ikyu-website の CI。PR と main への push で、ローカルの `npm run verify` と同じ検査を行う。
+# KitaKita Lab の CI(ジョブ名 Quality Checks)に名前と流れを揃えている。違いは次の2点。
+#   - カバレッジ閾値は設けない(画面の部品の単体テストより、データと生成HTMLの検査で事故を防ぐ方針)
+#   - ビルド後に scripts/check-site.mjs で out/ の HTML を検査する
+# 本番への配信は Cloudflare Pages が担う(このワークフローはデプロイしない)。
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    # Ruleset の必須チェックはこの名前で指定する。変更するときは Ruleset 側も合わせること
+    name: Quality Checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Cloudflare Pages の NODE_VERSION=22 に合わせる。
+      # テストは .ts を Node の型除去機能で読み込むため 22.18 以上が必要(22 系の最新が入る)
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Content & design token tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Check built site
+        run: npm run check:site
