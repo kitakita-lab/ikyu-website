@@ -47,8 +47,13 @@ jobs:
       - name: Content & design token tests
         run: npm test
 
+      # Google Fonts の CSS は取得元によって形式が変わり、GitHub Actions ではフォント URL に
+      # クエリが付いた形式が返って Turbopack のビルドが失敗する(scripts/update-font-fixture.mjs に経緯)。
+      # CI では本番(Cloudflare Pages)と同じ形式の CSS を固定データから読ませる。フォントファイルは Google から取得する。
       - name: Build
         run: npm run build
+        env:
+          NEXT_FONT_GOOGLE_MOCKED_RESPONSES: ${{ github.workspace }}/tests/fixtures/google-fonts-css.json
 
       - name: Check built site
         run: npm run check:site
