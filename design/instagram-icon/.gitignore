@@ -1,0 +1,7 @@
+__pycache__/
+# build.py で作り直せる確認画像（保存方針 C によりリポジトリには置かない）
+preview/icon-1024-*.png
+preview/circle-1024-*.png
+preview/small-*.png
+final/preview-circle-*.png
+final/detail-100pct-*.png
