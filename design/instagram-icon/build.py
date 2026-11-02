@@ -38,6 +38,9 @@ SUBTEXT_BOX = (340, 98)  # x >= 340 かつ y >= 98 を透明にする
 # レイアウト（キャンバス幅に対する比率）
 LOGO_WIDTH = 0.78  # ロゴの横幅
 OFFSET_Y = 0.0  # ロゴ外接矩形の中心を、キャンバス中心からずらす量（下が正）
+# 正式ロゴは右上がりに傾いている（サブテキストと並べる前提の角度）。アイコンでは単独で使うため、
+# 時計回りに回して水平にする。値は筆跡の主軸（画素の重み付き主成分）の実測値。形は変えず回転だけ。
+ROTATE_DEG = 3.7
 
 # 陰影の比較案。opacity は陰影レイヤーの最大不透明度、blur/offset はキャンバス幅に対する比率。
 SHADOW_COLOR = (69, 54, 47)  # 正式ロゴの文字色（ブランドの濃茶）
@@ -60,20 +63,41 @@ def make_mark() -> None:
     print(f"{MARK.relative_to(REPO)}: {crop.shape[1]}x{crop.shape[0]}")
 
 
-def compose(size: int, variant: str) -> Image.Image:
+def tilt_deg(alpha: Image.Image) -> float:
+    """筆跡の主軸の角度（右上がりが正）。画素の不透明度で重み付けした主成分で測る。"""
+    a = np.asarray(alpha, float) / 255
+    ys, xs = np.nonzero(a)
+    w = a[ys, xs]
+    c = np.cov(np.vstack([xs, ys]), aweights=w)
+    vx, vy = np.linalg.eigh(c)[1][:, 1]
+    if vx < 0:
+        vx, vy = -vx, -vy
+    return float(np.degrees(np.arctan2(-vy, vx)))
+
+
+def logo_layer(size: int, rotate: float | None = None) -> Image.Image:
+    """白ロゴのアルファ（キャンバスと同じ大きさ）。拡大 → 回転 → 外接矩形の中心をキャンバス中心へ。"""
+    rotate = ROTATE_DEG if rotate is None else rotate
+    mark_alpha = Image.open(MARK).getchannel("A")
+    w = round(size * LOGO_WIDTH)  # 回転前のロゴ幅で大きさを決める（回転で大きさは変えない）
+    h = round(w * mark_alpha.height / mark_alpha.width)
+    alpha = mark_alpha.resize((w, h), Image.LANCZOS)
+    if rotate:
+        alpha = alpha.rotate(-rotate, resample=Image.BICUBIC, expand=True)
+        alpha = alpha.crop(alpha.getbbox())
+    x = (size - alpha.width) // 2
+    y = (size - alpha.height) // 2 + round(size * OFFSET_Y)
+    layer = Image.new("L", (size, size), 0)
+    layer.paste(alpha, (x, y))
+    return layer
+
+
+def compose(size: int, variant: str, rotate: float | None = None) -> Image.Image:
     v = VARIANTS[variant]
     bg = Image.open(BG).convert("RGB")
     bg = bg.resize((size, size), Image.LANCZOS) if bg.size != (size, size) else bg
 
-    mark_alpha = Image.open(MARK).getchannel("A")
-    w = round(size * LOGO_WIDTH)
-    h = round(w * mark_alpha.height / mark_alpha.width)
-    alpha = mark_alpha.resize((w, h), Image.LANCZOS)
-    x = (size - w) // 2
-    y = (size - h) // 2 + round(size * OFFSET_Y)
-
-    layer = Image.new("L", (size, size), 0)
-    layer.paste(alpha, (x, y))
+    layer = logo_layer(size, rotate)
 
     out = bg.convert("RGBA")
     if v["opacity"] > 0:
@@ -164,6 +188,23 @@ def preview() -> None:
         d.text((x + 170, cell + pad + 40), f"{k}: shadow opacity {v['opacity']:.2f}", fill=(40, 40, 40), font=font(16))
     cmp_.save(PREVIEW / "compare-ABC.png", optimize=True)
 
+    # 角度の比較: 回転なし（正式ロゴのまま）／3.0°／実測の ROTATE_DEG。水平の補助線つき
+    angles = [0.0, 3.0, ROTATE_DEG]
+    cell, pad = 420, 30
+    tilt = Image.new("RGB", (pad + len(angles) * (cell + pad), cell + 2 * pad + 30), "white")
+    d = ImageDraw.Draw(tilt)
+    for i, ang in enumerate(angles):
+        x = pad + i * (cell + pad)
+        im = compose(1024, "B", ang).resize((cell, cell), Image.LANCZOS)
+        tilt.paste(im, (x, pad))
+        lay = logo_layer(cell, ang)
+        _, top, _, bot = lay.getbbox()
+        for yy in (top + (bot - top) * 0.28, top + (bot - top) * 0.62):  # x ハイトの上下あたり
+            d.line((x, pad + yy, x + cell, pad + yy), fill=(220, 60, 60), width=1)
+        t = tilt_deg(lay)
+        d.text((x, pad + cell + 8), f"rotate {ang:.1f} deg  ->  axis tilt {t:+.1f} deg", fill=(40, 40, 40), font=font(15))
+    tilt.save(PREVIEW / "compare-angle.png", optimize=True)
+
     # 検査値
     report = check(imgs)
     (PREVIEW / "checks.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
@@ -183,11 +224,16 @@ def check(imgs: dict) -> dict:
     identical = bool((official[:h, :w][keep] == m[keep]).all())
     # 2. サブテキスト領域が透明
     subtext_removed = bool((m[y0:, x0:, 3] == 0).all())
-    # 3. 円形トリミングに収まるか（ロゴ外接矩形の四隅が内接円の内側か）
+    # 3. 円形トリミングに収まるか（1024px で、ロゴの画素のうち中心から最も遠いものの距離）
     lw = LOGO_WIDTH
-    lh = lw * h / w
-    cy = OFFSET_Y
-    corner = max(np.hypot(lw / 2, cy + s * lh / 2) for s in (-1, 1))
+    layer = logo_layer(1024)
+    la = np.asarray(layer)
+    yy, xx = np.nonzero(la)
+    far = float(np.hypot(xx + 0.5 - 512, yy + 0.5 - 512).max()) / 512
+    bx0, by0, bx1, by1 = layer.getbbox()
+    # 傾き（右上がりが正）: 正式ロゴのまま／回転後
+    tilt_before = tilt_deg(mark.getchannel("A"))
+    tilt_after = tilt_deg(layer)
     # 4. 背景と白の輝度コントラスト（WCAG の式。背景はロゴ周辺の平均）
     bg = np.array(Image.open(BG).convert("RGB")).astype(float)
 
@@ -196,8 +242,8 @@ def check(imgs: dict) -> dict:
         c = np.where(c <= 0.03928, c / 12.92, ((c + 0.055) / 1.055) ** 2.4)
         return 0.2126 * c[..., 0] + 0.7152 * c[..., 1] + 0.0722 * c[..., 2]
 
-    s = bg.shape[0]
-    region = bg[int(s * (0.5 - lh / 2)) : int(s * (0.5 + lh / 2)), int(s * (0.5 - lw / 2)) : int(s * (0.5 + lw / 2))]
+    k = bg.shape[0] / 1024
+    region = bg[int(by0 * k) : int(by1 * k), int(bx0 * k) : int(bx1 * k)]
     lb = lum(region.reshape(-1, 3).mean(0))
     return {
         "official_logo": str(OFFICIAL_LOGO.relative_to(REPO)),
@@ -206,8 +252,11 @@ def check(imgs: dict) -> dict:
         "mark_pixels_identical_to_official_outside_subtext_box": identical,
         "subtext_box_transparent": subtext_removed,
         "logo_width_ratio": lw,
-        "logo_corner_distance_ratio_to_circle_radius": round(float(corner) / 0.5, 3),
-        "fits_in_circle": bool(corner < 0.5),
+        "rotate_deg_clockwise": ROTATE_DEG,
+        "tilt_deg_official_mark": round(tilt_before, 2),
+        "tilt_deg_after_rotation": round(tilt_after, 2),
+        "farthest_logo_pixel_ratio_to_circle_radius": round(far, 3),
+        "fits_in_circle": bool(far < 1),
         "contrast_white_vs_background_mean": round((1.05) / (lb + 0.05), 2),
         "logo_scale_at_1024": round(1024 * lw / w, 2),
         "logo_scale_at_4096": round(4096 * lw / w, 2),
