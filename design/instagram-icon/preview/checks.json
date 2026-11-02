@@ -1,0 +1,17 @@
+{
+  "official_logo": "public/images/logo.png",
+  "official_logo_sha256": "b9d07d1492915befc7cd32776878396f19587d6eb9a03d411201ca083f70b821",
+  "mark_size_px": [
+    559,
+    166
+  ],
+  "mark_pixels_identical_to_official_outside_subtext_box": true,
+  "subtext_box_transparent": true,
+  "logo_width_ratio": 0.78,
+  "logo_corner_distance_ratio_to_circle_radius": 0.814,
+  "fits_in_circle": true,
+  "contrast_white_vs_background_mean": 1.51,
+  "logo_scale_at_1024": 1.43,
+  "logo_scale_at_4096": 5.72,
+  "background_scale_at_4096": 3.27
+}
