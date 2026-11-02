@@ -3,14 +3,14 @@
 レイヤー構成（下から）:
   1. src/background.png   採用済みの背景（無加工。縮小・拡大のリサンプルのみ）
   2. 陰影                  ロゴのアルファを Gaussian ぼかし（色・強さは VARIANTS）
-  3. ロゴ                  src/logo-mark.png のアルファを白で塗ったもの
+  3. ロゴ                  src/logo-mark.png のアルファを高解像度化（輪郭の再標本化）・回転して白で塗ったもの
 
 ロゴの形は正式ロゴ public/images/logo.png のアルファをそのまま使う（描き直しなし）。
 
 使い方:
   python3 build.py mark                   # 正式ロゴからサブテキストを除いた src/logo-mark.png を作る
   python3 build.py preview                # 1024px の確認画像・円形・小サイズプレビュー
-  python3 build.py final --variant B      # 承認後: 4096px の完成 PNG
+  python3 build.py final --variant B      # 4096px の完成 PNG と、それから作るプレビュー（final/）
 """
 
 from __future__ import annotations
@@ -37,7 +37,10 @@ SUBTEXT_BOX = (340, 98)  # x >= 340 かつ y >= 98 を透明にする
 
 # レイアウト（キャンバス幅に対する比率）
 LOGO_WIDTH = 0.78  # ロゴの横幅
-OFFSET_Y = 0.0  # ロゴ外接矩形の中心を、キャンバス中心からずらす量（下が正）
+OFFSET_X = 0.0  # ロゴ外接矩形の中心を、キャンバス中心からずらす量（右が正）
+OFFSET_Y = 0.0  # 同上（下が正）
+EDGE_PX = 1.5  # 高解像度化したロゴの縁（アンチエイリアス）の幅。出力画素
+
 # 正式ロゴは右上がりに傾いている（サブテキストと並べる前提の角度）。アイコンでは単独で使うため、
 # 時計回りに回して水平にする。値は筆跡の主軸（画素の重み付き主成分）の実測値。形は変えず回転だけ。
 ROTATE_DEG = 3.7
@@ -75,17 +78,45 @@ def tilt_deg(alpha: Image.Image) -> float:
     return float(np.degrees(np.arctan2(-vy, vx)))
 
 
-def logo_layer(size: int, rotate: float | None = None) -> Image.Image:
-    """白ロゴのアルファ（キャンバスと同じ大きさ）。拡大 → 回転 → 外接矩形の中心をキャンバス中心へ。"""
-    rotate = ROTATE_DEG if rotate is None else rotate
-    mark_alpha = Image.open(MARK).getchannel("A")
-    w = round(size * LOGO_WIDTH)  # 回転前のロゴ幅で大きさを決める（回転で大きさは変えない）
-    h = round(w * mark_alpha.height / mark_alpha.width)
-    alpha = mark_alpha.resize((w, h), Image.LANCZOS)
+def _gauss(a: np.ndarray, sigma: float) -> np.ndarray:
+    """分離型の Gaussian ぼかし（numpy のみ）。"""
+    if sigma <= 0:
+        return a
+    r = int(np.ceil(3 * sigma))
+    k = np.exp(-0.5 * (np.arange(-r, r + 1) / sigma) ** 2)
+    k /= k.sum()
+    a = np.apply_along_axis(lambda v: np.convolve(np.pad(v, r, mode="edge"), k, "valid"), 0, a)
+    return np.apply_along_axis(lambda v: np.convolve(np.pad(v, r, mode="edge"), k, "valid"), 1, a)
+
+
+def mark_alpha_hr(width: int, rotate: float, crop: bool = True) -> Image.Image:
+    """正式ロゴのアルファを width 幅に高解像度化し、rotate 度（時計回り）回したもの。
+
+    方式（輪郭の再標本化）: 元のアルファを 32bit 浮動小数で Lanczos 拡大 → 回転 → 元の 0.3px 相当の
+    ぼかしで 8bit の段差だけを均す → 不透明度 50% の等値線（元ロゴの輪郭の位置）を中心に、
+    出力 1.5px 幅のなめらかな縁を付け直す。形（輪郭の位置）は元のまま、縁だけが出力解像度でくっきりする。
+    描き直し・トレース・生成 AI は使わない。
+    """
+    src = Image.open(MARK).getchannel("A")
+    pad = 8  # 正式ロゴは k の上端が画像の端に接しているため、透明の余白を足してから拡大する
+    a0 = np.pad(np.asarray(src, np.float32) / 255, pad)
+    s = width / src.width  # 拡大倍率
+    f = Image.fromarray(a0, "F").resize((round(a0.shape[1] * s), round(a0.shape[0] * s)), Image.LANCZOS)
     if rotate:
-        alpha = alpha.rotate(-rotate, resample=Image.BICUBIC, expand=True)
-        alpha = alpha.crop(alpha.getbbox())
-    x = (size - alpha.width) // 2
+        f = f.rotate(-rotate, resample=Image.BICUBIC, expand=True)
+    g = _gauss(np.asarray(f, np.float64), 0.3 * s)
+    t = np.clip((g - 0.5) / (EDGE_PX / s) + 0.5, 0, 1)
+    a = Image.fromarray(np.round(t * t * (3 - 2 * t) * 255).astype(np.uint8), "L")
+    if not crop:  # 検査用: 余白を含めたまま（元画像と位置を対応させるため）
+        return a
+    return a.crop(a.getbbox())
+
+
+def logo_layer(size: int, rotate: float | None = None) -> Image.Image:
+    """白ロゴのアルファ（キャンバスと同じ大きさ）。高解像度化・回転 → 外接矩形の中心をキャンバス中心へ。"""
+    rotate = ROTATE_DEG if rotate is None else rotate
+    alpha = mark_alpha_hr(round(size * LOGO_WIDTH), rotate)  # 回転前のロゴ幅で大きさを決める
+    x = (size - alpha.width) // 2 + round(size * OFFSET_X)
     y = (size - alpha.height) // 2 + round(size * OFFSET_Y)
     layer = Image.new("L", (size, size), 0)
     layer.paste(alpha, (x, y))
@@ -264,12 +295,46 @@ def check(imgs: dict) -> dict:
     }
 
 
+def fidelity() -> dict:
+    """高解像度化したロゴ（回転なし）を元の大きさに戻し、正式ロゴのアルファと比べる。"""
+    src = np.asarray(Image.open(MARK).getchannel("A"), np.float64) / 255
+    w = round(4096 * LOGO_WIDTH)
+    hr = mark_alpha_hr(w, 0, crop=False)  # 8px の余白込み
+    ph, pw = src.shape[0] + 16, src.shape[1] + 16
+    back = np.asarray(hr.resize((pw, ph), Image.BOX), np.float64)[8:-8, 8:-8] / 255
+    edge = (src > 0.02) & (src < 0.98)
+    return {
+        "hr_width_px": w,
+        "area_ratio_hr_vs_official": round(float(np.asarray(hr, np.float64).sum() / 255 / (w / src.shape[1]) ** 2 / src.sum()), 4),
+        "mean_abs_diff_after_downscale": round(float(np.abs(back - src).mean()), 4),
+        "mean_abs_diff_on_official_edge_pixels": round(float(np.abs(back - src)[edge].mean()), 4),
+    }
+
+
 def final(variant: str) -> None:
     FINAL.mkdir(exist_ok=True)
     im = compose(4096, variant)
     p = FINAL / f"ikyu-instagram-icon-4096-{variant}.png"
     im.save(p, optimize=True)
     print(p.relative_to(REPO), im.size)
+    # 完成 PNG から作るプレビュー
+    circle_view(im).save(FINAL / f"preview-circle-{variant}.png", optimize=True)
+    sheet_small(im, f"final {variant} 4096px -> actual display sizes").save(FINAL / f"preview-small-{variant}.png", optimize=True)
+    # 等倍の拡大確認（4096px の一部を 100% で切り出し）: 背景の質感とロゴの縁
+    im.crop((1500, 1450, 2300, 2050)).save(FINAL / f"detail-100pct-{variant}.png", optimize=True)
+    report = {
+        "file": p.name,
+        "size_px": list(im.size),
+        "background_source_px": Image.open(BG).width,
+        "background_scale": round(4096 / Image.open(BG).width, 3),
+        "logo_source_width_px": Image.open(MARK).width,
+        "logo_scale": round(4096 * LOGO_WIDTH / Image.open(MARK).width, 3),
+        "rotate_deg_clockwise": ROTATE_DEG,
+        "tilt_deg_after_rotation": round(tilt_deg(logo_layer(4096)), 2),
+        "logo_fidelity": fidelity(),
+    }
+    (FINAL / "checks.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
+    print(json.dumps(report, ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":

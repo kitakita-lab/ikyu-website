@@ -1,0 +1,19 @@
+{
+  "file": "ikyu-instagram-icon-4096-B.png",
+  "size_px": [
+    4096,
+    4096
+  ],
+  "background_source_px": 1254,
+  "background_scale": 3.266,
+  "logo_source_width_px": 559,
+  "logo_scale": 5.715,
+  "rotate_deg_clockwise": 3.7,
+  "tilt_deg_after_rotation": 0.01,
+  "logo_fidelity": {
+    "hr_width_px": 3195,
+    "area_ratio_hr_vs_official": 0.9994,
+    "mean_abs_diff_after_downscale": 0.0027,
+    "mean_abs_diff_on_official_edge_pixels": 0.0661
+  }
+}
