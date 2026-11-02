@@ -36,7 +36,7 @@ FINAL = HERE / "final"
 SUBTEXT_BOX = (340, 98)  # x >= 340 かつ y >= 98 を透明にする
 
 # レイアウト（キャンバス幅に対する比率）
-LOGO_WIDTH = 0.60  # ロゴの横幅（Version 4 で 78% → 60%。55/60/65% を比較して決定）
+LOGO_WIDTH = 0.40  # ロゴの横幅（Version 4 で 78% → 60%、Version 5 で 60% → 40%。人間が決定）
 OFFSET_X = 0.01  # ロゴ外接矩形の中心を、キャンバス中心からずらす量（右が正）。重心が左寄りのため視覚補正
 OFFSET_Y = 0.0  # 同上（下が正）
 EDGE_PX = 1.5  # 高解像度化したロゴの縁（アンチエイリアス）の幅。出力画素
@@ -310,7 +310,7 @@ def stroke_px_src() -> float:
     return float(np.median(runs))
 
 
-def widths(candidates=(0.55, 0.60, 0.65), variant: str = "B") -> None:
+def widths(candidates=(0.55, 0.60, 0.65), variant: str = "B", name: str = "compare-width") -> None:
     """ロゴ幅の比較資料: 円形表示と実寸の小サイズ表示（150/77/44/32px、白・黒の画面）。"""
     global LOGO_WIDTH
     keep = LOGO_WIDTH
@@ -328,7 +328,7 @@ def widths(candidates=(0.55, 0.60, 0.65), variant: str = "B") -> None:
         LOGO_WIDTH = lw
         im = compose(1024, variant)
         x0 = pad + i * col_w
-        d.text((x0, 8), f"logo width {lw * 100:.0f}%", fill=(30, 30, 30), font=font(18))
+        d.text((x0, 8), f"logo width {lw * 100:.1f}%".replace(".0%", "%"), fill=(30, 30, 30), font=font(18))
         c = circle(im, big)
         sheet.paste(c, (x0, head), c)
         for r, (bgc, fg) in enumerate([((255, 255, 255), (60, 60, 60)), ((0, 0, 0), (200, 200, 200))]):
@@ -349,8 +349,8 @@ def widths(candidates=(0.55, 0.60, 0.65), variant: str = "B") -> None:
             "gap_left_right_to_circle_edge_ratio": [round(bb[0] / 512, 3), round((1024 - bb[2]) / 512, 3)],
         }
     LOGO_WIDTH = keep
-    sheet.save(PREVIEW / "compare-width.png", optimize=True)
-    (PREVIEW / "compare-width.json").write_text(json.dumps({"stroke_px_source": stroke, **info}, ensure_ascii=False, indent=2) + "\n")
+    sheet.save(PREVIEW / f"{name}.png", optimize=True)
+    (PREVIEW / f"{name}.json").write_text(json.dumps({"stroke_px_source": stroke, **info}, ensure_ascii=False, indent=2) + "\n")
     print(json.dumps({"stroke_px_source": stroke, **info}, ensure_ascii=False, indent=2))
 
 
@@ -400,5 +400,7 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("cmd", choices=["mark", "preview", "widths", "final"])
     ap.add_argument("--variant", default="B", choices=list(VARIANTS))
+    ap.add_argument("--widths", default="0.55,0.60,0.65", help="widths: 比較するロゴ幅（カンマ区切り）")
+    ap.add_argument("--name", default="compare-width", help="widths: 出力ファイル名（拡張子なし）")
     a = ap.parse_args()
-    {"mark": make_mark, "preview": preview, "widths": widths, "final": lambda: final(a.variant)}[a.cmd]()
+    {"mark": make_mark, "preview": preview, "widths": lambda: widths(tuple(float(v) for v in a.widths.split(",")), a.variant, a.name), "final": lambda: final(a.variant)}[a.cmd]()
