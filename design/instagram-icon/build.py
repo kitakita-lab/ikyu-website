@@ -36,8 +36,8 @@ FINAL = HERE / "final"
 SUBTEXT_BOX = (340, 98)  # x >= 340 かつ y >= 98 を透明にする
 
 # レイアウト（キャンバス幅に対する比率）
-LOGO_WIDTH = 0.78  # ロゴの横幅
-OFFSET_X = 0.0  # ロゴ外接矩形の中心を、キャンバス中心からずらす量（右が正）
+LOGO_WIDTH = 0.60  # ロゴの横幅（Version 4 で 78% → 60%。55/60/65% を比較して決定）
+OFFSET_X = 0.01  # ロゴ外接矩形の中心を、キャンバス中心からずらす量（右が正）。重心が左寄りのため視覚補正
 OFFSET_Y = 0.0  # 同上（下が正）
 EDGE_PX = 1.5  # 高解像度化したロゴの縁（アンチエイリアス）の幅。出力画素
 
@@ -104,9 +104,14 @@ def mark_alpha_hr(width: int, rotate: float, crop: bool = True) -> Image.Image:
     f = Image.fromarray(a0, "F").resize((round(a0.shape[1] * s), round(a0.shape[0] * s)), Image.LANCZOS)
     if rotate:
         f = f.rotate(-rotate, resample=Image.BICUBIC, expand=True)
-    g = _gauss(np.asarray(f, np.float64), 0.3 * s)
-    t = np.clip((g - 0.5) / (EDGE_PX / s) + 0.5, 0, 1)
-    a = Image.fromarray(np.round(t * t * (3 - 2 * t) * 255).astype(np.uint8), "L")
+    g = np.asarray(f, np.float64)
+    if s >= EDGE_PX:
+        g = _gauss(g, 0.3 * s)
+        t = np.clip((g - 0.5) / (EDGE_PX / s) + 0.5, 0, 1)
+        g = t * t * (3 - 2 * t)
+    # 倍率が EDGE_PX 未満（縮小〜わずかな拡大）では元の縁の幅のほうが細いため、Lanczos の結果をそのまま使う
+    # （縁を付け直すと内側まで半透明になる）
+    a = Image.fromarray(np.round(np.clip(g, 0, 1) * 255).astype(np.uint8), "L")
     if not crop:  # 検査用: 余白を含めたまま（元画像と位置を対応させるため）
         return a
     return a.crop(a.getbbox())
@@ -295,6 +300,60 @@ def check(imgs: dict) -> dict:
     }
 
 
+def stroke_px_src() -> float:
+    """正式ロゴの線の太さ（元画像の画素）。縦方向の連続した不透明部分の長さの中央値で近似。"""
+    a = np.asarray(Image.open(MARK).getchannel("A")) > 127
+    runs = []
+    for col in a.T:
+        d = np.diff(np.r_[0, col.astype(int), 0])
+        runs += list(np.nonzero(d == -1)[0] - np.nonzero(d == 1)[0])
+    return float(np.median(runs))
+
+
+def widths(candidates=(0.55, 0.60, 0.65), variant: str = "B") -> None:
+    """ロゴ幅の比較資料: 円形表示と実寸の小サイズ表示（150/77/44/32px、白・黒の画面）。"""
+    global LOGO_WIDTH
+    keep = LOGO_WIDTH
+    big, sizes, pad = 380, [150, 77, 44, 32], 24
+    col_w = big + pad
+    head = 34
+    row_small = max(sizes) + 2 * pad + 18
+    H = head + big + pad + 2 * row_small + 40
+    sheet = Image.new("RGB", (pad + len(candidates) * col_w, H), "white")
+    d = ImageDraw.Draw(sheet)
+    src_w = Image.open(MARK).width
+    stroke = stroke_px_src()
+    info = {}
+    for i, lw in enumerate(candidates):
+        LOGO_WIDTH = lw
+        im = compose(1024, variant)
+        x0 = pad + i * col_w
+        d.text((x0, 8), f"logo width {lw * 100:.0f}%", fill=(30, 30, 30), font=font(18))
+        c = circle(im, big)
+        sheet.paste(c, (x0, head), c)
+        for r, (bgc, fg) in enumerate([((255, 255, 255), (60, 60, 60)), ((0, 0, 0), (200, 200, 200))]):
+            top = head + big + pad + r * row_small
+            d.rectangle((x0 - pad // 2, top, x0 + col_w - pad // 2, top + row_small), fill=bgc)
+            x = x0
+            for sz in sizes:
+                cc = circle(im, sz)
+                sheet.paste(cc, (x, top + pad + (max(sizes) - sz)), cc)
+                d.text((x, top + pad + max(sizes) + 2), f"{sz}", fill=fg, font=font(11))
+                x += sz + 10
+        layer = logo_layer(1024)
+        bb = layer.getbbox()
+        info[f"{lw:.2f}"] = {
+            "logo_width_px_at": {str(sz): round(sz * lw, 1) for sz in sizes},
+            "stroke_px_at": {str(sz): round(stroke * sz * lw / src_w, 2) for sz in sizes},
+            "logo_area_share_of_circle": round(float(np.asarray(layer, float).sum() / 255) / (np.pi * 512**2), 3),
+            "gap_left_right_to_circle_edge_ratio": [round(bb[0] / 512, 3), round((1024 - bb[2]) / 512, 3)],
+        }
+    LOGO_WIDTH = keep
+    sheet.save(PREVIEW / "compare-width.png", optimize=True)
+    (PREVIEW / "compare-width.json").write_text(json.dumps({"stroke_px_source": stroke, **info}, ensure_ascii=False, indent=2) + "\n")
+    print(json.dumps({"stroke_px_source": stroke, **info}, ensure_ascii=False, indent=2))
+
+
 def fidelity() -> dict:
     """高解像度化したロゴ（回転なし）を元の大きさに戻し、正式ロゴのアルファと比べる。"""
     src = np.asarray(Image.open(MARK).getchannel("A"), np.float64) / 255
@@ -339,7 +398,7 @@ def final(variant: str) -> None:
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["mark", "preview", "final"])
+    ap.add_argument("cmd", choices=["mark", "preview", "widths", "final"])
     ap.add_argument("--variant", default="B", choices=list(VARIANTS))
     a = ap.parse_args()
-    {"mark": make_mark, "preview": preview, "final": lambda: final(a.variant)}[a.cmd]()
+    {"mark": make_mark, "preview": preview, "widths": widths, "final": lambda: final(a.variant)}[a.cmd]()
