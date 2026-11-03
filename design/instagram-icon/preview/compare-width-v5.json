@@ -1,0 +1,60 @@
+{
+  "stroke_px_source": 19.5,
+  "0.60": {
+    "logo_width_px_at": {
+      "150": 90.0,
+      "77": 46.2,
+      "44": 26.4,
+      "32": 19.2
+    },
+    "stroke_px_at": {
+      "150": 3.14,
+      "77": 1.61,
+      "44": 0.92,
+      "32": 0.67
+    },
+    "logo_area_share_of_circle": 0.026,
+    "gap_left_right_to_circle_edge_ratio": [
+      0.414,
+      0.375
+    ]
+  },
+  "0.40": {
+    "logo_width_px_at": {
+      "150": 60.0,
+      "77": 30.8,
+      "44": 17.6,
+      "32": 12.8
+    },
+    "stroke_px_at": {
+      "150": 2.09,
+      "77": 1.07,
+      "44": 0.61,
+      "32": 0.45
+    },
+    "logo_area_share_of_circle": 0.012,
+    "gap_left_right_to_circle_edge_ratio": [
+      0.613,
+      0.576
+    ]
+  },
+  "0.28": {
+    "logo_width_px_at": {
+      "150": 41.7,
+      "77": 21.4,
+      "44": 12.2,
+      "32": 8.9
+    },
+    "stroke_px_at": {
+      "150": 1.45,
+      "77": 0.75,
+      "44": 0.43,
+      "32": 0.31
+    },
+    "logo_area_share_of_circle": 0.006,
+    "gap_left_right_to_circle_edge_ratio": [
+      0.736,
+      0.699
+    ]
+  }
+}
