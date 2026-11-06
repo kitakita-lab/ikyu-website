@@ -23,8 +23,11 @@ ikyu（ハンドメイドアクセサリーブランド）の公式サイト。`
 
 ## チェック
 
-- `npm run lint` / `npx tsc --noEmit` / `npm run build`
+- `npm run verify`（lint・型チェック・テスト・ビルド・`out/` のサイト検査）。CI の `Quality Checks` も同じ内容を実行する。
+- 何を機械で確認し、何を人が確認するかは `docs/brand-review.md`。美しさ・上品さを機械で合否判定するテストは作らない。
+- テストは、データや生成 HTML の実際に起こりうる不具合を検出するものだけを足す。テストや検査の条件を緩めて通さない。
 - 静的書き出し（`output: "export"`）前提。API Route・middleware・ISR・画像最適化サーバーなど、サーバー機能は追加しない。
+- サイトと販促物で共通に使うブランド情報の所在は `docs/brand-system.md`。
 
 ## Review guidelines
 
@@ -35,6 +38,7 @@ ikyu（ハンドメイドアクセサリーブランド）の公式サイト。`
 - サイト内の URL（canonical・OGP・sitemap・構造化データ）を `src/content/site.ts` の `site.url` から組み立てているか
 - 依頼の範囲外で、文言・ブランド表記・購入リンク・写真を変えていないか
 - イベント写真の来場者のプライバシー処理（顔の処理）を外していないか
+- `tests/`・`scripts/check-site.mjs` の条件を緩めて、検査を通るようにしていないか
 
 ## ルール（人間が承認したものだけを追記する）
 
