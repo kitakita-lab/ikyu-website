@@ -67,8 +67,8 @@ npm run lint   # ESLint
 
 ## 本番ドメイン
 
-正規URLは `https://ikyumakes.com`(wwwなし)です。`www.ikyumakes.com` へのアクセスは
-Vercel側で 308 リダイレクトされます。
+正規URLは `https://ikyumakes.com`(wwwなし)です。`www.ikyumakes.com` から正規URLへの
+リダイレクトはこのリポジトリでは管理していません(設定するのは Cloudflare 側)。
 
 サイト内で生成されるURL(canonical・og:url・OGP画像・sitemap・robots・構造化データ)は
 すべて `src/content/site.ts` の `site.url` から組み立てています。ドメインを変える場合は
